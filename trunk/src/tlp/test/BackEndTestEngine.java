@@ -60,7 +60,7 @@ public class BackEndTestEngine {
 					table.Record record = null;
 					do {
 						record = qPlan.next();
-						if (record != null) System.out.println(record.shortString());
+						//if (record != null) System.out.println(record.shortString());
 					} while (record != null);
 					qPlan.close();
 					
@@ -69,7 +69,7 @@ public class BackEndTestEngine {
 					record = null;
 					do {
 						record = qPlan.next();
-						if (record != null) System.out.println("E " + record.shortString());
+						//if (record != null) System.out.println("E " + record.shortString());
 					} while (record != null);
 					qPlan.close();
 				} else {
