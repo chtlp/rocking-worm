@@ -3,7 +3,7 @@ package logging;
 /**
  * The STARTCHECKPOINT log record.
  */
-class StartCheckpointRecord implements LogRecord {
+class StartCheckpointRecord extends LogRecord {
 	int[] txs;
 
 	/**

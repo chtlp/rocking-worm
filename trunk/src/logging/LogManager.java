@@ -21,8 +21,9 @@ public class LogManager implements Iterable<BasicLogRecord> {
 			.getLogger("lq.logging.LogManager");
 
 	public static LogManager getInstance() {
-		if (logMgr == null)
+		if (logMgr == null) {
 			logMgr = new LogManager(Constant.LoggingFile);
+		}
 		return logMgr;
 	}
 
@@ -51,11 +52,8 @@ public class LogManager implements Iterable<BasicLogRecord> {
 	public LogManager(String logfile) {
 		this.logfile = logfile;
 		int logsize = FileManager.getInstance().size(logfile);
-		if (logsize == 0) {
+		if (logsize == 0)
 			appendNewBlock();
-			new StartCheckpointRecord(new int[0]).writeToLog();
-			new EndCheckpointRecord().writeToLog();
-		}
 		else {
 			currentblk = new Block(logfile, logsize - 1);
 			mypage.read(currentblk);

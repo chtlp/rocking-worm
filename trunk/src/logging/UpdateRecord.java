@@ -4,7 +4,7 @@ import transaction.Transaction;
 import filesystem.BufferManager;
 import filesystem.Page;
 
-public class UpdateRecord implements LogRecord {
+public class UpdateRecord extends LogRecord {
 	private int txnum, offset;
 	private int pageID;
 	private byte[] newVal;

@@ -3,6 +3,8 @@ package tlp.test;
 import java.io.File;
 import java.io.FileInputStream;
 
+import logging.Recovery;
+
 import parser.Absyn;
 import parser.AbsynList;
 import parser.lexer;
@@ -37,6 +39,7 @@ public class BackEndTestEngine {
 		new File(dataFileName).delete();
 
 		FileStorage.loadFile(dataFileName);
+		Recovery.recover();
 		FileStorage.init();
 		//System.out.println("finish database initialzing");
 
