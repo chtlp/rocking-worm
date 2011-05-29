@@ -4,6 +4,8 @@ import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.TreeSet;
 
+import logging.LogManager;
+
 import tlp.util.Debug;
 import transaction.Transaction;
 
@@ -222,6 +224,7 @@ public class BufferManager {
 		for(Page p : buffer.values()) {
 			p.writeBack();
 		}
+		LogManager.flushAll();
 	}
 	
 	public static void cleanUp(Transaction tr) {
