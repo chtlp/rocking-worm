@@ -57,8 +57,10 @@ public class BPlusLeaf extends BPlusNode {
 		iterTr = null;
 	}
 
+	static int cc = 0;
 	@Override
 	public InsertionInfo insert(Transaction tr, Value key, int rid, Value value) {
+		++cc;
 		KeyValuePair pair = null;
 		int ptr = -1;
 		for (beforeFirst(tr); hasNext();) {
@@ -99,7 +101,7 @@ public class BPlusLeaf extends BPlusNode {
 			page.write(tr, key);
 		if (index.isPrimaryIndex())
 			page.write(tr, value);
-		assert page.getPos() < TOTAL_HEADER_LEN + (loc + 1)
+		assert page.getPos() <= TOTAL_HEADER_LEN + (loc + 1)
 				* index.leafEntrySize : index.table.getName();
 
 		if (index.isPrimaryIndex())
@@ -293,7 +295,7 @@ public class BPlusLeaf extends BPlusNode {
 		--num;
 		page.writeByte(tr, Page.HEADER_LENGTH, (byte) num);
 
-		int minEntry = (index.maxNumEntry - 1) / 2;
+		int minEntry = minNumEntry();
 		if (num < minEntry && father != null) {
 
 			Page lp = null, rp = null;

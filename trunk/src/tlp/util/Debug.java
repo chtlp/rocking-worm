@@ -61,7 +61,7 @@ public class Debug {
 	
 	public static boolean breakOn(boolean cond) {
 		if (cond && testSimple.isInfoEnabled()) {
-			testSimple.debug("testJoinLogger breaks here");
+			testSimple.debug("testSimpleLogger breaks here");
 			return true;
 		}
 		return false;

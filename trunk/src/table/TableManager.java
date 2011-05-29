@@ -29,7 +29,6 @@ public class TableManager {
 
 	public static synchronized Index createIndex(Transaction tr, Table table,
 			String name, int columnID, boolean isPrimary) {
-		Debug.breakOn(table.getName().equals("Battles"));
 		Page p = BufferManager.allocatePage(tr);
 		Debug.indexLogger.debug("create index on page {}", p.getPageID());
 		Index i = BPlusIndex.createBPlusIndex(tr, p.getPageID(), name, table,
