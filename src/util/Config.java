@@ -49,13 +49,17 @@ public class Config {
 	public static boolean getLoggingOption() {
 		return Boolean.parseBoolean(get("Logging"));
 	}
+	
+	public static boolean getStartNew() {
+		return getBoolean("StartNew");
+	}
 
 	public static void set(String key, String val) {
 		options.put(key, val);
 	}
 
 	public static boolean getBoolean(String key) {
-		return Boolean.parseBoolean(props.getProperty(key));
+		return Boolean.parseBoolean(get(key));
 	}
 
 

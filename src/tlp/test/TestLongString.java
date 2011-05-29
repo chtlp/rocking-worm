@@ -124,11 +124,18 @@ public class TestLongString {
 			if (i >= M1 && i < M2 || i % 10 == 0) deletion.add(word);
 		}
 		
+//		tbl.printTable(System.out);
+		lineIndex.print(System.out);
+		
 		for(int i=0; i < queries.size(); ++i) {
-			
+			Debug.breakOn(queries.get(i).equals("abacuses"));
 			Record r = lineIndex.find(new StrValue(textQueries.get(i)));
 			
-			assert r.getValue(0).get().equals(queries.get(i)) : queries.get(i);
+			if (r == null) {
+				System.err.format("%s %s not found", queries.get(i), textQueries.get(i));
+			}
+			
+			assert r.getValue(0).get().equals(queries.get(i)) : queries.get(i) + " " + textQueries.get(i);
 			
 			Debug.testLight2.debug("{} queried", r.getValue(0));
 		}

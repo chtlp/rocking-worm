@@ -250,6 +250,11 @@ public class BPlusInternalNode extends BPlusNode {
 	@Override
 	public boolean remove(Transaction tr, Value key, int rid, Page father,
 			int left, int mid, int right) {
+		if (Debug.testLight.isDebugEnabled() && pageID == 12) {
+			beforeFirst(tr);
+			Debug.testLight.debug("internal node {}, numEntry = {}", pageID, page.readByte(Page.HEADER_LENGTH));
+			close();
+		}
 		boolean removed = false;
 		int childL = -1, child = -1, childR = -1, childPage = -1;
 		int ptr = -1;
@@ -289,7 +294,7 @@ public class BPlusInternalNode extends BPlusNode {
 
 		int num = page.readByte(Page.HEADER_LENGTH);
 
-		int minEntry = index.maxNumEntry / 2;
+		int minEntry = minNumEntry();
 		if (num < minEntry && father != null) {
 
 			Page lp = null, rp = null;

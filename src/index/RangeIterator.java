@@ -24,16 +24,18 @@ public class RangeIterator implements TableIterator{
 	Integer left, right;
 	boolean equalRange;
 	
-	public RangeIterator(Transaction tr, Table t, Value v) {
+	public RangeIterator(Transaction tr, Index i, Value v) {
 		this.tr = tr;
-		index = t.getScanIndex(tr);
+		Table t = i.getTable();
+		index = t.getIndex(tr, i.getRootPage());
 		this.v = v;
 		equalRange = true;
 	}
 	
-	public RangeIterator(Transaction tr, Table t, Integer left, Value lv, Integer right, Value rv) {
+	public RangeIterator(Transaction tr, Index i, Integer left, Value lv, Integer right, Value rv) {
 		this.tr = tr;
-		index = t.getScanIndex(tr);
+		Table t = i.getTable();
+		index = t.getIndex(tr, i.getRootPage());
 		this.left = left;
 		this.lv = lv;
 		this.right = right;

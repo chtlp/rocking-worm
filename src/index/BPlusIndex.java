@@ -68,10 +68,12 @@ public class BPlusIndex extends Index implements TableIterator {
 			leafEntrySize = internalEntrySize - Page.INT_SIZE; // no child-page
 		else {
 			int s = 0;
-			Debug.testSimple.debug("table {} index", table.getName());
+			// Debug.testSimple.debug("table {} index", table.getName());
 			for (int i = 0; i < table.numColumns(); ++i) {
 				s += table.getColumn(i).valueSize();
-				Debug.testSimple.debug("column {}, size {}", table.getColumn(i).getName(), table.getColumn(i).valueSize());
+				// Debug.testSimple.debug("column {}, size {}",
+				// table.getColumn(i).getName(),
+				// table.getColumn(i).valueSize());
 			}
 
 			leafEntrySize = s + Page.INT_SIZE + 2;
@@ -242,14 +244,14 @@ public class BPlusIndex extends Index implements TableIterator {
 
 	@Override
 	public TableIterator findEqual(Value key) {
-		return new RangeIterator(tr, this.table, key);
+		return new RangeIterator(tr, this, key);
 	}
 
 	@Override
-	public TableIterator findRange(Integer left, Value lv, Integer right, Value rv) {
-		return new RangeIterator(tr, this.table, left, lv, right, rv);
+	public TableIterator findRange(Integer left, Value lv, Integer right,
+			Value rv) {
+		return new RangeIterator(tr, this, left, lv, right, rv);
 	}
-
 
 	@Override
 	public int numColumns() {

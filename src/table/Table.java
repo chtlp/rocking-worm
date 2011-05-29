@@ -324,4 +324,9 @@ public class Table {
 		tr.commit();
 	}
 
+	public BPlusIndex getIndex(Transaction tr, int rootPage) {
+		BPlusIndex ret = BPlusIndex.loadFrom(tr, this, rootPage);
+		return ret;
+	}
+
 }
