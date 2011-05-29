@@ -2,7 +2,11 @@ package logging;
 
 import java.util.HashSet;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Recovery {
+	private static Logger logger = LoggerFactory.getLogger("lq.logging.Recovery");
 	private static HashSet<Integer> commitX = new HashSet<Integer>();
 	private static HashSet<Integer> abortX = new HashSet<Integer>();
 	private static HashSet<Integer> activeX = new HashSet<Integer>();
@@ -26,6 +30,7 @@ public class Recovery {
 		boolean checkpoint = false;
 		while (it.hasNext()) {
 			LogRecord rec = it.next();
+			logger.debug(rec.toString());
 			switch (rec.op()) {
 				case LogRecord.COMMIT:
 					commitX.add(rec.txID());
