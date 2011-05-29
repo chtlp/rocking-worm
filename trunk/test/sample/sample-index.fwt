@@ -1,0 +1,12 @@
+@NEW_THREAD
+use nano
+;
+
+create index idx0 on Classes(class)
+;
+
+@UN_ORDERED_SELECT
+select name, numGuns
+from Classes, Ships
+where Classes.class = Ships.class
+;

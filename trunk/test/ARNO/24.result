@@ -1,0 +1,9 @@
+#SELECT MODEL162.is_mutagen,MODEL162.logp, count(distinct MODEL162.model_id ) FROM MODEL MODEL162  WHERE MODEL162.is_mutagen='T' group by MODEL162.logp , MODEL162.is_mutagen order by MODEL162.is_mutagen ASC, MODEL162.logp ASC
+T 1 3
+T 2 12
+T 3 31
+T 4 35
+T 5 27
+T 6 14
+T 7 3
+;

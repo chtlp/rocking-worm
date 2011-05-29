@@ -1,0 +1,1 @@
+select distinct from_airport from flight order by from_airport ASC;

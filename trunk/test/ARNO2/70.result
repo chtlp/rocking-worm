@@ -1,0 +1,6 @@
+#SELECT MODEL264.is_mutagen,MODEL264.lumo, count(distinct MODEL264.model_id ) FROM MODEL MODEL264  WHERE MODEL264.logp='4' group by MODEL264.lumo , MODEL264.is_mutagen order by MODEL264.is_mutagen ASC, MODEL264.lumo ASC
+F -1 5
+T -3 5
+T -2 22
+T -1 8
+;

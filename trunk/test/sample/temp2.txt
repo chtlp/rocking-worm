@@ -1,0 +1,5 @@
+use nano
+;
+
+select A.class, B.class from Classes as A, Classes as B where A.country = B.country
+;

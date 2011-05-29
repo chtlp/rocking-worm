@@ -1,0 +1,26 @@
+@NEW_THREAD
+# select name, numGuns
+# from Classes, Ships
+# where Classes.class = Ships.class
+California	12
+Haruna	8
+Hiei	8
+Iowa	9
+Kirishima	8
+Kongo	8
+Missouri	9
+Musashi	9
+New Jersey	9
+North Carolian	9
+Ramillies	8
+Renown	6
+Repulse	6
+Resolution	8
+Revenge	8
+Royal Oak	8
+Royal Sovereign	8
+Tennessee	12
+Washington	9
+Wisconsin	9
+Yamato	9
+;

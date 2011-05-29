@@ -1,0 +1,4 @@
+#SELECT MODEL1.is_mutagen,MODEL1.is_mutagen, count(distinct MODEL1.model_id ) FROM MODEL MODEL1  group by MODEL1.is_mutagen , MODEL1.is_mutagen order by MODEL1.is_mutagen ASC, MODEL1.is_mutagen ASC
+F F 63
+T T 125
+;

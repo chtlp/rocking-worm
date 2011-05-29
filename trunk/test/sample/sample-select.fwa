@@ -1,0 +1,66 @@
+@NEW_THREAD
+# select ship,battle from Outcomes where result='sunk'
+Bismarck	North Atlantic
+Fuso	Surigao Strait
+Hood	North Atlantic
+Kirishima	Guadalcanal
+Scharnhorst	North Cape
+Yamashiro	Surigao Strait
+;
+# select name, displacement, numGuns
+# from Classes as x, Ships as y, Outcomes as z
+# where z.battle='Guadalcanal' and z.ship=y.name and y.class=x.class
+# order by name, displacement, numGuns
+Kirishima	32000	8
+Washington	37000	9
+;
+# select country from Classes group by country having count(type)>1
+Gt. Britain
+Japan
+USA
+;
+# select sum(numGuns) from Classes,Ships where Classes.class=Ships.class group by country
+52.000
+50.000
+78.000
+;
+# select distinct Ships.class  from Outcomes ,Ships
+# where Outcomes.ship=Ships.name and Outcomes.result='sunk' order by Ships.class
+Kongo
+;
+# select Ships.name from Ships ,Classes
+# where bore=16 and  Ships.class=Classes.class order by Ships.name
+Iowa
+Missouri
+New Jersey
+North Carolian
+Washington
+Wisconsin
+;
+# select avg(numGuns) from Classes,Ships
+# where Ships.class=Classes.class and Classes.type='battleship'
+9.0667
+;
+# select class,min(launched) from Ships group by class order by class
+Iowa	1943
+Kongo	1913
+North Carolina	1941
+Renown	1916
+Revenge	1916
+Tennessee	1920
+Yamato	1941
+;
+# select country from Classes ,Ships
+# where Classes.class=Ships.class
+# group by country
+# having sum(numGuns)>=
+# all(select sum(numGuns) from Classes,Ships where Classes.class=Ships.class group by country)
+# order by country
+USA
+;
+# select class from Classes
+# where (select count(class) from Ships,Outcomes
+# where Ships.class=Classes.class and Ships.name=Outcomes.ship and Outcomes.result='sunk')>=3
+# order by class
+# EMPTY
+;

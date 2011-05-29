@@ -1,0 +1,1 @@
+select count(aircraft_code) as num, min(pay_load) as min ,max(pay_load) as max from aircraft where pay_load>0;

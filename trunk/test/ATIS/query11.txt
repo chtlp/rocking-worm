@@ -1,0 +1,1 @@
+select distinct * from fare order by fare_code ASC;

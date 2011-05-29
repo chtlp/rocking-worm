@@ -1,0 +1,70 @@
+@NEW_THREAD
+use atis
+;
+
+@ORDERED_SELECT
+select city.city_name,state.state_name, city.state_code,state.state_code
+from city,state 
+where city.city_code='MATL' and city.state_code=state.state_code
+;
+
+@ORDERED_SELECT
+select city.city_name,state.state_name,city.city_code 
+from state,city 
+where city.state_code=state.state_code 
+order by city.city_name ASC
+;
+
+@ORDERED_SELECT
+select month_name.month_name,day_name.day_name 
+from month_name,day_name 
+where month_name.month_number=day_name.day_code 
+order by month_name.month_name ASC
+;
+
+@ORDERED_SELECT
+select month_name.month_name,day_name.day_name 
+from month_name,day_name 
+where month_name.month_number=day_name.day_code and day_name.day_code >= 4 
+order by month_name.month_name ASC
+;
+
+@ORDERED_SELECT
+select flight.flight_code,aircraft.aircraft_type from flight,aircraft where flight.aircraft_code=aircraft.aircraft_code order by flight.flight_code ASC
+;
+
+@ORDERED_SELECT
+select distinct category from aircraft order by category ASC
+;
+
+@ORDERED_SELECT
+select distinct from_airport from flight order by from_airport ASC
+;
+
+@ORDERED_SELECT
+select distinct aircraft_code from flight order by aircraft_code ASC
+;
+
+@ORDERED_SELECT
+select distinct * from fare order by fare_code ASC
+;
+
+@ORDERED_SELECT
+select sum(engines) from aircraft
+;
+
+@ORDERED_SELECT
+select count(aircraft_code) as num, min(pay_load) as mi ,max(pay_load) as ma from aircraft where pay_load>0
+;
+
+@ORDERED_SELECT
+select distinct flight_code from flight_fare order by flight_code ASC
+;
+
+@ORDERED_SELECT
+select city_code, avg(ground_fare) as avg_fare from ground_service where ground_fare<>0 group by city_code order by city_code ASC
+;
+
+@ORDERED_SELECT
+select distinct flight.flight_code,aircraft.aircraft_type from flight,aircraft where flight.aircraft_code=aircraft.aircraft_code order by flight.flight_code, aircraft.aircraft_type ASC
+;

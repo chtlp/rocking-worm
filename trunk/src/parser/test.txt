@@ -1,0 +1,1 @@
+select city_code, avg(ground_fare) as avg_fare from ground_service where ground_fare<>0 group by city_code order by city_code ASC;
