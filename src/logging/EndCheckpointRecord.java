@@ -3,7 +3,7 @@ package logging;
 /**
  * The ENDCHECKPOINT log record.
  */
-class EndCheckpointRecord implements LogRecord {
+class EndCheckpointRecord extends LogRecord {
 
 	/**
 	 * Creates a nonquiescent checkpoint record.

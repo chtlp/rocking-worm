@@ -4,7 +4,7 @@ package logging;
  * The COMMIT log record
  * 
  */
-public class CommitRecord implements LogRecord {
+public class CommitRecord extends LogRecord {
 	private int txnum;
 
 	/**

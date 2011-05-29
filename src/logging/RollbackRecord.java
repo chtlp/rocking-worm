@@ -3,7 +3,7 @@ package logging;
 /**
  * The ROLLBACK log record.
  */
-public class RollbackRecord implements LogRecord {
+public class RollbackRecord extends LogRecord {
 	private int txnum;
 
 	/**

@@ -1,6 +1,6 @@
 package logging;
 
-public class StartRecord implements LogRecord {
+public class StartRecord extends LogRecord {
 	private int txnum;
 
 	/**
