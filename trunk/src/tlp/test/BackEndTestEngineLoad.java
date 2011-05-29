@@ -18,7 +18,7 @@ import util.Constant;
 import filesystem.BufferManager;
 import filesystem.FileStorage;
 
-public class BackEndTestEngine {
+public class BackEndTestEngineLoad {
 
 	public static void main(String[] args) throws Exception {
 //		String fileName = "create.txt";
@@ -34,7 +34,7 @@ public class BackEndTestEngine {
 		Config.load("test1.config");
 
 		String dataFileName = Config.getDataFile();
-		new File(dataFileName).delete();
+//		new File(dataFileName).delete();
 
 		FileStorage.loadFile(dataFileName);
 		FileStorage.init();
@@ -42,7 +42,7 @@ public class BackEndTestEngine {
 
 //		String[] files = new String[] { "./test/ARNO2/create_tables.txt", "./test/ARNO2/insert_ATOM.txt"};
 		
-		String[] files = new String[] { "./test/sample/sample-create.txt" };
+		String[] files = new String[] { "./test/sample/sample-select.txt" };
 
 		for (String fileName : files) {
 			parser p = new parser(new lexer(new FileInputStream(fileName)));
