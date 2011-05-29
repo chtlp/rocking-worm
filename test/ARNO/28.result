@@ -1,0 +1,4 @@
+#SELECT MODEL178.is_mutagen,MODEL178.lumo, count(distinct MODEL178.model_id ) FROM MODEL MODEL178  WHERE MODEL178.is_mutagen='F' group by MODEL178.lumo , MODEL178.is_mutagen order by MODEL178.is_mutagen ASC, MODEL178.lumo ASC
+F -2 17
+F -1 46
+;

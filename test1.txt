@@ -1,0 +1,7 @@
+create database DB1;
+create table Table1 
+(A int NOT NULL,
+B float NOT NULL,
+PRIMARY KEY (A));
+insert into Table1 values(3,0.8);
+insert into Table1 values(5,0.6);

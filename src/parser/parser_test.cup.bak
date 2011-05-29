@@ -1,0 +1,83 @@
+package parser;
+import java_cup.runtime.*;
+
+parser code  {: 
+  public void report_error(String message, Object info) {
+    StringBuffer m = new StringBuffer("Error ");
+
+    if (info instanceof java_cup.runtime.Symbol) 
+      m.append( "("+info.toString()+")" );
+     
+    m.append(" : "+message);
+   
+    System.out.println(m);
+  }
+   
+  public void report_fatal_error(String message, Object info) {
+    report_error(message, info);
+    System.exit(1);
+  }
+:};
+
+terminal String ID, STR;
+terminal Integer NUM;
+
+terminal COMMA,  SEMICOLON, LPAREN, RPAREN,
+LBRACK, RBRACK, DOT, PLUS, MINUS,MOD,
+MULT, DIV, EQ, NEQ, LT, LTEQ, GT, GTEQ, AND, OR,
+CREATE, DATABASE, USE, DROP, TABLE, PRIMARY, KEY, NOT, 
+DEFAULT,AUTOINCREMENT,NULL,INT,FLOAT,CHAR,DATETIME,BOOLEAN,DECIMAL,TIMESTAMP,VARCHAR,
+INSERT,INTO,VALUES,DELETE,FROM,WHERE,UPDATE,SET,UNIQUE,INDEX,ON,
+DISTINCT,GROUP,BY,HAVING,ORDER,ASC,DESC,AS,
+AVG,COUNT,MIN,MAX,SUM,EXISTS,ANY,IN,ALL,TRUE,FALSE,
+DATE,TIME,SELECT,STAR,UMINUS;
+
+
+non terminal Exp exp;
+non terminal ExpList explist;
+non terminal CreateDefList createDefList;
+non terminal CreateDef createDef;
+non terminal ColumnDef columnDef;
+non terminal DataType dataType;
+non terminal BoolExpr boolExpr;
+non terminal SelectExpr selectExpr;
+non terminal SelectExprList selectExprList;
+non terminal TblRefList tblRefList;
+non terminal ColNameList colNameList;
+non terminal Func func;
+non terminal ColName colName;
+non terminal TblRef tblRef;
+non terminal Cop cop;
+non terminal Value value;
+non terminal ConstValue constValue;
+non terminal ValueList valueList;
+non terminal Select selectE;
+non terminal UpdateList updateList;
+non terminal query_1, query_2, query_3, query_4, query_5,col_def_1, col_def_2, col_def_3;
+
+precedence left OR;
+precedence left AND;
+precedence nonassoc EQ , NEQ , LT , LTEQ , GT , GTEQ;
+precedence left PLUS, MINUS;
+precedence left MULT, DIV, MOD;
+precedence left LPAREN;
+precedence left UMINUS;
+
+start with explist;
+
+explist::= 
+	ID:i{:System.out.println(i);:}
+	|SELECT{:System.out.println("SELECT");:}
+	|DOT{: System.out.println("DOT");:}
+	|COMMA {:System.out.println("COMMA");:}
+	|COUNT {:System.out.println("COUNT");:}
+	|LPAREN {:System.out.println("LPAREN");:}
+	|RPAREN {:System.out.println("RPAREN");:}
+	|DISTINCT {:System.out.println("DISTINCT");:}
+	|FROM{:System.out.println("FROM");:}
+	|WHERE {:System.out.println("WHERE");:}
+	|EQ {:System.out.println("EQ");:}
+	|GROUP {:System.out.println("GROUP");:}
+	|BY {:System.out.println("BY");:}
+	|ASC {:System.out.println("ASC");:}
+;

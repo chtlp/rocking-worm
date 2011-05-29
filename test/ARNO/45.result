@@ -1,0 +1,13 @@
+#SELECT MODEL217.is_mutagen,MODEL217.logp, count(distinct MODEL217.model_id ) FROM MODEL MODEL217  WHERE MODEL217.lumo='-1' group by MODEL217.logp , MODEL217.is_mutagen order by MODEL217.is_mutagen ASC, MODEL217.logp ASC
+F 0 1
+F 1 4
+F 2 21
+F 3 13
+F 4 5
+F 7 2
+T 2 3
+T 3 9
+T 4 8
+T 5 8
+T 6 1
+;

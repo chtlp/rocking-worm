@@ -1,0 +1,480 @@
+package parser;
+import java_cup.runtime.*;
+
+parser code  {: 
+  public void report_error(String message, Object info) {
+    StringBuffer m = new StringBuffer("Error ");
+
+    if (info instanceof java_cup.runtime.Symbol) 
+      m.append( "("+info.toString()+")" );
+     
+    m.append(" : "+message);
+   
+    throw new RuntimeException(m.toString());
+  }
+   
+  public void report_fatal_error(String message, Object info) {
+    report_error(message, info);
+  }
+:};
+
+terminal String ID,STR;
+terminal Integer NUM;
+
+terminal COMMA,  SEMICOLON, LPAREN, RPAREN,
+DOT, PLUS, MINUS,MOD,
+MULT, DIV, EQ, NEQ, LT, LTEQ, GT, GTEQ, AND, OR,
+CREATE, DATABASE, USE, DROP, TABLE, PRIMARY, KEY, NOT, 
+DEFAULT,AUTOINCREMENT,NULL,INT,FLOAT,CHAR,DATETIME,BOOLEAN,DECIMAL,TIMESTAMP,VARCHAR,
+INSERT,INTO,VALUES,DELETE,FROM,WHERE,UPDATE,SET,UNIQUE,INDEX,ON,
+DISTINCT,GROUP,BY,HAVING,ORDER,ASC,DESC,AS,
+EXISTS,ANY,IN,ALL,TRUE,FALSE,
+SELECT,UMINUS,MAX,MIN,SUM,COUNT,AVG;
+
+
+non terminal Absyn absyn;
+non terminal AbsynList absynlist;
+non terminal CreateDefList createDefList;
+non terminal CreateDef createDef;
+non terminal ColumnDef columnDef;
+non terminal DataType dataType;
+non terminal BoolExpr boolExpr;
+non terminal SelectExpr selectExpr;
+non terminal SelectExprList selectExprList;
+non terminal TblRefList tblRefList;
+non terminal ColNameList colNameList;
+non terminal Func func;
+non terminal ColName colName;
+non terminal TblRef tblRef;
+non terminal Cop cop;
+non terminal Value value;
+non terminal ConstValue constValue;
+non terminal ValueList valueList;
+non terminal Select selectE;
+non terminal UpdateList updateList;
+non terminal query_1, query_2, query_3, query_4, query_5,col_def_1, col_def_2, col_def_3;
+non terminal String iden;
+
+precedence left OR;
+precedence left AND;
+precedence nonassoc EQ , NEQ , LT , LTEQ , GT , GTEQ;
+precedence left PLUS, MINUS;
+precedence left MULT, DIV, MOD;
+precedence left LPAREN;
+precedence left UMINUS;
+
+start with absynlist;
+
+absynlist::= 
+	absyn:e SEMICOLON{:RESULT=new AbsynList(e,null);
+		if (Absyn.DEBUG) System.out.println("explist1");:}
+	|absyn:e SEMICOLON absynlist:elist{:RESULT=new AbsynList(e,elist);
+	if (Absyn.DEBUG) System.out.println("explist2");:}
+;
+
+absyn::=
+	CREATE DATABASE iden:i{:RESULT=new CreateDatabase(ileft, i);
+	if (Absyn.DEBUG) System.out.println("exp1");:}
+	|USE iden:i{:RESULT=new UseDatabase(ileft, i);
+	if (Absyn.DEBUG) System.out.println("exp2");:}
+	|DROP DATABASE iden:i{:RESULT=new DropDatabase(ileft, i);
+	if (Absyn.DEBUG) System.out.println("exp3");:}
+	
+	|CREATE TABLE iden:i LPAREN createDefList:c RPAREN{:RESULT=new CreateTable(ileft, i ,c);
+	if (Absyn.DEBUG) System.out.println("exp4");:}
+	|DROP TABLE iden:i{:RESULT=new DropTable(ileft,new NameList(i, null));
+	if (Absyn.DEBUG) System.out.println("exp5");:}
+	|DROP TABLE iden:i COMMA iden:j{:RESULT=new DropTable(ileft, new NameList(i, new NameList(j, null)));
+	if (Absyn.DEBUG) System.out.println("exp6");:}
+
+	|INSERT INTO iden:i VALUES LPAREN valueList:v RPAREN{:RESULT= new Insert(ileft, i, v, null,null);
+	if (Absyn.DEBUG) System.out.println("exp7");:}
+	|INSERT INTO iden:i LPAREN selectE:s RPAREN{:RESULT = new Insert(ileft, i, null, s,null);
+	if (Absyn.DEBUG) System.out.println("exp8");:}
+	|INSERT INTO iden:i LPAREN colNameList:c RPAREN VALUES  LPAREN valueList:v RPAREN{:RESULT = new Insert(ileft, i, v, null,c);
+	if (Absyn.DEBUG) System.out.println("exp9");:}
+
+	|DELETE FROM iden:i{:RESULT = new Delete(ileft,i,null);:}
+	|DELETE FROM iden:i WHERE boolExpr:b {:RESULT= new Delete(ileft, i, b);
+	if (Absyn.DEBUG) System.out.println("exp10");:}
+
+	|UPDATE iden:i SET updateList:u{:RESULT= new Update(ileft, i, u, null);
+	if (Absyn.DEBUG) System.out.println("exp11");:}
+	|UPDATE iden:i SET updateList:u WHERE boolExpr:b{:RESULT= new Update(ileft, i, u, b);
+	if (Absyn.DEBUG) System.out.println("exp12");:}
+
+	|CREATE INDEX iden:i ON iden:i2 LPAREN colName:c RPAREN{:RESULT = new CreateIndex(ileft, false, i, i2, c);
+	if (Absyn.DEBUG) System.out.println("exp13");:}
+	|CREATE UNIQUE INDEX iden:i ON iden:i2 LPAREN colName:c RPAREN{:RESULT = new CreateIndex(ileft, true, i, i2, c);
+	if (Absyn.DEBUG) System.out.println("exp14");:}
+	|DROP INDEX iden:i ON iden:i2{:RESULT= new DropIndex(ileft, i, i2);
+	if (Absyn.DEBUG) System.out.println("exp15");:}
+
+	|selectE:s{:if (Absyn.DEBUG) System.out.println("exp16");RESULT = s;:}
+;
+
+selectE::=
+	SELECT selectExprList:s
+	{:
+	RESULT = new Select(s, false, null);
+	if (Absyn.DEBUG) System.out.println("select_expr_list");
+	:}
+	|
+	SELECT DISTINCT selectExprList:s
+	{:
+	RESULT = new Select(s, true, null);
+	if (Absyn.DEBUG) System.out.println("query 2");
+	:}
+	|
+	SELECT selectExprList:s query_1:q
+	{:
+	RESULT = new Select(s, false, q);
+	if (Absyn.DEBUG) System.out.println("query 3");
+	:}
+	|
+	SELECT DISTINCT selectExprList:s query_1:q
+	{:
+	RESULT = new Select(s, true, q);
+	if (Absyn.DEBUG) System.out.println("query 4");
+	:}
+;
+
+query_1 ::=
+	FROM tblRefList:t query_2:q
+	{:
+	RESULT = new HasFrom(t, q);
+	if (Absyn.DEBUG) System.out.println("query_1 1");
+	:}
+	|
+	query_2:q
+	{:
+	RESULT = new HasFrom(null, q);
+	if (Absyn.DEBUG) System.out.println("query_1 2");
+	:}
+	|
+	FROM tblRefList:t
+	{:
+	RESULT = new HasFrom(t, null);
+	if (Absyn.DEBUG) System.out.println("query_1 3");
+	:}
+;
+
+query_2 ::=
+	WHERE boolExpr:b query_3:q
+	{:
+	RESULT = new HasWhere( b, q);
+	if (Absyn.DEBUG) System.out.println("query_2 1");
+	:}
+	|
+	query_3:q
+	{:
+	RESULT = new HasWhere( null, q);
+	if (Absyn.DEBUG) System.out.println("query_2 2");
+	:}
+	|
+	WHERE boolExpr:b
+	{:
+	RESULT = new HasWhere( b, null);
+	if (Absyn.DEBUG) System.out.println("query_2 3");
+	:}
+;
+
+query_3 ::=
+	GROUP BY colName:c query_4:q
+	{:
+	RESULT = new HasGroup(c, q);
+	if (Absyn.DEBUG) System.out.println("query_3 1");
+	:}
+	|
+	query_4:q
+	{:
+	RESULT = new HasGroup(null, q);
+	if (Absyn.DEBUG) System.out.println("query_3 2");
+	:}
+	|
+	GROUP BY colName:c
+	{:
+	RESULT = new HasGroup(c, null);
+	if (Absyn.DEBUG) System.out.println("query_3 3");
+	:}
+;
+
+query_4 ::=
+	HAVING boolExpr:b query_5:q
+	{:
+	RESULT = new HasHaving( b, q);
+	if (Absyn.DEBUG) System.out.println("query_4 1");
+	:}
+	|
+	query_5:q
+	{:
+	RESULT = new HasHaving(null, q);
+	if (Absyn.DEBUG) System.out.println("query_4 2");
+	:}
+	|
+	HAVING boolExpr:b
+	{:
+	RESULT = new HasHaving( b, null);
+	if (Absyn.DEBUG) System.out.println("query_4 3");
+	:}
+;
+
+query_5 ::=
+	ORDER:o BY colNameList:c
+	{:
+	RESULT = new HasOrder(oleft, c);
+	if (Absyn.DEBUG) System.out.println("query_5");
+	:}
+;
+
+valueList::=
+	value:v{:RESULT=new ValueList(v,null);
+	if (Absyn.DEBUG) System.out.println("valueList1");:}
+	|value:v COMMA valueList:vl{:RESULT=new ValueList(v,vl);
+	if (Absyn.DEBUG) System.out.println("valueList2");:}
+;
+
+createDefList::=
+	createDef:c{:RESULT=new CreateDefList(c,null);
+	if (Absyn.DEBUG) System.out.println("createDefList1");:}
+	|createDef:c COMMA createDefList:cdl{:RESULT=new CreateDefList(c,cdl);
+	if (Absyn.DEBUG) System.out.println("createDefList2");:}
+;
+
+createDef::=
+	columnDef:c{:RESULT=new CreateDef(c.pos, c, null);
+	if (Absyn.DEBUG) System.out.println("createDef1");:}
+	|PRIMARY KEY LPAREN colName:c RPAREN{:RESULT=new CreateDef(c.pos, null, c);
+	if (Absyn.DEBUG) System.out.println("createDef2");:}
+;
+
+columnDef ::=
+	colName:c dataType:d{:RESULT = new ColumnDef(c.pos, d, c, null);
+	if (Absyn.DEBUG) System.out.println("columnDef1");:}
+	|
+	colName:c dataType:d col_def_1:c1
+	{:RESULT = new ColumnDef(c.pos, d, c, c1);
+	if (Absyn.DEBUG) System.out.println("columnDef2");:}
+;
+
+col_def_1 ::=
+	NOT:n NULL{:RESULT = new IsNull(0, null);
+	if (Absyn.DEBUG) System.out.println("col_def_1_1");:}
+	|
+	NULL:n{:RESULT = new IsNull(1, null);
+	if (Absyn.DEBUG) System.out.println("col_def_1_2");:}
+	|
+	NOT NULL col_def_2:c{:RESULT = new IsNull(0, c);
+	if (Absyn.DEBUG) System.out.println("col_def_1_3");:}
+	|
+	NULL col_def_2:c{:RESULT = new IsNull(1, c);
+	if (Absyn.DEBUG) System.out.println("col_def_1_4");:}
+	|
+	col_def_2:c{:RESULT = new IsNull(2, c);
+	if (Absyn.DEBUG) System.out.println("col_def_1_5");:}
+;
+
+col_def_2 ::=
+	DEFAULT constValue:c{:RESULT = new HasDefault(c, null);
+	if (Absyn.DEBUG) System.out.println("col_def_2_1");:} 
+	|
+	DEFAULT constValue:c col_def_3:c2{:RESULT = new HasDefault(c, c2);
+	if (Absyn.DEBUG) System.out.println("col_def_2_2");:} 
+	|
+	col_def_3:c{:RESULT = new HasDefault(null, c);
+	if (Absyn.DEBUG) System.out.println("col_def_2_3");:} 
+;
+
+col_def_3 ::=
+	AUTOINCREMENT{:RESULT = new IsAuto(true);
+	if (Absyn.DEBUG) System.out.println("col_def_3_1");:}
+;
+
+
+dataType::=
+	INT{:RESULT=new DataType(0,0,0,0);
+	if (Absyn.DEBUG) System.out.println("dataType1");:}
+	|FLOAT{:RESULT= new DataType(1,0,0,0);
+	if (Absyn.DEBUG) System.out.println("dataType2");:}
+	|CHAR LPAREN NUM:i RPAREN{:RESULT= new DataType(2,i,0,0);
+	if (Absyn.DEBUG) System.out.println("dataType3");:}
+	|DATETIME{:RESULT= new DataType(3,0,0,0);
+	if (Absyn.DEBUG) System.out.println("dataType4");:}
+	|BOOLEAN{:RESULT= new DataType(4,0,0,0);
+	if (Absyn.DEBUG) System.out.println("dataType5");:}
+	|DECIMAL LPAREN NUM:i RPAREN{:RESULT = new DataType(5,0,i,0);
+	if (Absyn.DEBUG) System.out.println("dataType6");:}
+	|DECIMAL LPAREN NUM:i COMMA NUM:j RPAREN{:RESULT = new DataType(8,0,i,j);
+	if (Absyn.DEBUG) System.out.println("dataType7");:}
+	|TIMESTAMP{:RESULT= new DataType(6,0,0,0);
+	if (Absyn.DEBUG) System.out.println("dataType8");:}
+	|VARCHAR LPAREN NUM:i RPAREN{:RESULT= new DataType(7,i,0,0);
+	if (Absyn.DEBUG) System.out.println("dataType9");:}
+;
+
+boolExpr::=
+	value:v1 cop:c value:v2{:RESULT= new CopValue(v1.pos, v1, v2 ,c);
+	if (Absyn.DEBUG) System.out.println("boolExpr1");:}
+	|boolExpr:b1 AND boolExpr:b2{:RESULT = new AndBoolExpr(b1.pos, b1, b2);
+	if (Absyn.DEBUG) System.out.println("boolExpr2");:}
+	|boolExpr:b1 OR boolExpr:b2{:RESULT = new OrBoolExpr(b1.pos, b1, b2);
+	if (Absyn.DEBUG) System.out.println("boolExpr3");:}
+	|EXISTS LPAREN selectE:s RPAREN{:RESULT = new ExistBoolExpr(s.pos, s, true);
+	if (Absyn.DEBUG) System.out.println("boolExpr4");:}
+	|NOT EXISTS LPAREN selectE:s RPAREN{:RESULT = new ExistBoolExpr(s.pos, s, false);
+	if (Absyn.DEBUG) System.out.println("boolExpr5");:}
+	|value:v cop:c ANY LPAREN selectE:s RPAREN{:RESULT = new AnyBoolExpr(v.pos, v, c, s);
+	if (Absyn.DEBUG) System.out.println("boolExpr6");:}
+	|value:v IN LPAREN selectE:s RPAREN{:RESULT = new InBoolExpr(v.pos, v, s);
+	if (Absyn.DEBUG) System.out.println("boolExpr7");:}
+	|value:v cop:c ALL LPAREN selectE:s RPAREN{:RESULT = new AllBoolExpr(v.pos, v, c, s);
+	if (Absyn.DEBUG) System.out.println("boolExpr8");:}
+	|LPAREN boolExpr:b RPAREN{:RESULT= new BracketBoolExpr(b.pos, b);
+	if (Absyn.DEBUG) System.out.println("boolExpr9");:}
+;
+
+selectExpr::=
+	value:v{:RESULT = new SelectExpr(v.pos, v, null,false);
+	if (Absyn.DEBUG) System.out.println("selectExpr1");:}
+	|value:v AS iden:i{:RESULT = new SelectExpr(v.pos, v, i,false);
+	if (Absyn.DEBUG) System.out.println("selectExpr2");:}
+	|MULT:m
+	{:
+	RESULT = new SelectExpr(mleft, null, null, true);
+	if (Absyn.DEBUG) System.out.println("select_expr 3");
+	:}
+;
+
+selectExprList::=
+	selectExpr:s{:RESULT=new SelectExprList(s,null);
+	if (Absyn.DEBUG) System.out.println("selectExprList1");:}
+	|selectExpr:s COMMA selectExprList:sl{:RESULT=new SelectExprList(s,sl);
+	if (Absyn.DEBUG) System.out.println("selectExprList2");:}	
+;
+
+tblRefList::=
+	tblRef:t{:RESULT = new TblRefList(t,null);
+	if (Absyn.DEBUG) System.out.println("tblRefList1");:}
+	|tblRef:t COMMA tblRefList:tl{:RESULT = new TblRefList(t,tl);
+	if (Absyn.DEBUG) System.out.println("tblRefList2");:}
+;
+
+
+colNameList::=
+	colName:c{:RESULT = new ColNameList(c,false,false,null);
+	if (Absyn.DEBUG) System.out.println("colNameList1");:}
+	|colName:c ASC{:RESULT = new ColNameList(c,true,false,null);
+	if (Absyn.DEBUG) System.out.println("colNameList2");:} 
+	|colName:c DESC{:RESULT = new ColNameList(c,false,true,null);
+	if (Absyn.DEBUG) System.out.println("colNameList3");:} 
+	|colName:c COMMA colNameList:cl{:RESULT = new ColNameList(c,false,false,cl);
+	if (Absyn.DEBUG) System.out.println("colNameList4");:}
+	|colName:c ASC COMMA colNameList:cl{:RESULT = new ColNameList(c,true,false,cl);
+	if (Absyn.DEBUG) System.out.println("colNameList5");:} 
+	|colName:c DESC COMMA colNameList:cl{:RESULT = new ColNameList(c,false,true,cl);
+	if (Absyn.DEBUG) System.out.println("colNameList6");:} 
+;
+
+func::=
+	AVG{:RESULT = new Func(0);
+	if (Absyn.DEBUG) System.out.println("func1");:}
+	|COUNT{:RESULT = new Func(1);
+	if (Absyn.DEBUG) System.out.println("func2");:}
+	|MIN{:RESULT = new Func(2);
+	if (Absyn.DEBUG) System.out.println("func3");:}
+	|MAX{:RESULT = new Func(3);
+	if (Absyn.DEBUG) System.out.println("func4");:}
+	|SUM{:RESULT = new Func(4);
+	if (Absyn.DEBUG) System.out.println("func5");:}
+;
+
+colName::=
+	iden:i{:RESULT = new ColName(null,i);
+	if (Absyn.DEBUG) System.out.println("colName1");:}
+	|iden:i DOT iden:j{:RESULT = new ColName(i,j);
+	if (Absyn.DEBUG) System.out.println("colName2");:}
+;
+
+tblRef::=
+	iden:i{:RESULT = new TblRef(ileft,i,null,null,null);
+	if (Absyn.DEBUG) System.out.println("tblRef1");:}
+	|iden:i AS iden:j{:RESULT = new TblRef(ileft,i,j,null,null);
+	if (Absyn.DEBUG) System.out.println("tblRef2");:}
+	|LPAREN selectE:s RPAREN AS iden:i{:RESULT = new TblRef(ileft,null,null,s,i);
+	if (Absyn.DEBUG) System.out.println("tblRef3");:}
+;
+
+cop::=
+	LT{:RESULT = new Cop(0);
+	if (Absyn.DEBUG) System.out.println("Cop1");:}
+	|GT{:RESULT = new Cop(1);
+	if (Absyn.DEBUG) System.out.println("Cop2");:}
+	|EQ{:RESULT = new Cop(2);
+	if (Absyn.DEBUG) System.out.println("Cop3");:}
+	|LTEQ{:RESULT = new Cop(3);
+	if (Absyn.DEBUG) System.out.println("Cop4");:}
+	|GTEQ{:RESULT = new Cop(4);
+	if (Absyn.DEBUG) System.out.println("Cop5");:}
+	|NEQ{:RESULT = new Cop(5);
+	if (Absyn.DEBUG) System.out.println("Cop6");:}
+;
+
+value::=
+	LPAREN value:v RPAREN{:RESULT = new BracketValue(v.pos,v);
+	if (Absyn.DEBUG) System.out.println("value1");:}
+	|colName:c{:RESULT = new ColNameValue(c.pos,c);
+	if (Absyn.DEBUG) System.out.println("value2");:}
+	|constValue:c{:RESULT = c;
+	if (Absyn.DEBUG) System.out.println("value3");:}
+	|value:v1 PLUS value:v2{:RESULT = new AopValue(v1.pos,v1,0,v2);
+	if (Absyn.DEBUG) System.out.println("value4");:}
+	|value:v1 MINUS value:v2{:RESULT = new AopValue(v1.pos,v1,1,v2);
+	if (Absyn.DEBUG) System.out.println("value5");:}
+	|value:v1 MULT value:v2{:RESULT = new AopValue(v1.pos,v1,2,v2);
+	if (Absyn.DEBUG) System.out.println("value6");:}
+	|value:v1 DIV value:v2{:RESULT = new AopValue(v1.pos,v1,3,v2);
+	if (Absyn.DEBUG) System.out.println("value7");:}
+	|value:v1 MOD value:v2{:RESULT = new AopValue(v1.pos,v1,4,v2);
+	if (Absyn.DEBUG) System.out.println("value8");:}
+	|LPAREN selectE:s RPAREN{:RESULT = new SubqueryValue(s.pos,s);
+	if (Absyn.DEBUG) System.out.println("value9");:}
+	|func:f LPAREN colName:c RPAREN{:RESULT = new FuncValue(f.pos,f,c);
+	if (Absyn.DEBUG) System.out.println("value10");:}
+;
+
+constValue::=
+	NUM:i{:RESULT = new IntConstValue(ileft, i.intValue());
+	if (Absyn.DEBUG) System.out.println("constValue1");:} 
+	|STR:s{:RESULT = new StringConstValue(sleft, s);
+	if (Absyn.DEBUG) System.out.println("constValue2");:}
+	|FLOAT:f{:RESULT = new FloatConstValue(fleft, ((Float)f).floatValue());
+	if (Absyn.DEBUG) System.out.println("constValue3");:}
+	|TRUE:t{:RESULT = new BoolConstValue(tleft, true);
+	if (Absyn.DEBUG) System.out.println("constValue4");:}
+	|FALSE:f{:RESULT = new BoolConstValue(fleft,false);
+	if (Absyn.DEBUG) System.out.println("constValue5");:}
+	|NULL:n{:RESULT = new NullConstValue(nleft);
+	if (Absyn.DEBUG) System.out.println("constValue6");:}
+	|DEFAULT{:RESULT = new DefaultConstValue();
+	if (Absyn.DEBUG) System.out.println("constValue7");:}
+	|MINUS NUM:i{:RESULT = new IntConstValue(ileft, 0-i.intValue());
+	if (Absyn.DEBUG) System.out.println("constValue8");:}%prec UMINUS
+	|MINUS FLOAT:f{:RESULT = new FloatConstValue(fleft, 0-((Float)f).floatValue());
+	if (Absyn.DEBUG) System.out.println("constValue9");:}%prec UMINUS
+;
+
+updateList::=
+	colName:c EQ value:v{:RESULT = new UpdateList(c.pos, c, v ,null);
+	if (Absyn.DEBUG) System.out.println("updateList1");:}
+	|colName:c EQ value:v COMMA updateList:u{:RESULT = new UpdateList(c.pos, c, v ,u);
+	if (Absyn.DEBUG) System.out.println("updateList2");:}
+;
+
+iden::=
+	ID:i {:RESULT = i; :}
+	|MAX:m {:RESULT = new String("max"); :}
+	|MIN:m {:RESULT = new String("min"); :}
+	|COUNT:c {:RESULT = new String("count"); :}
+	|AVG:a  {:RESULT = new String("avg"); :}
+	|SUM:s {:RESULT = new String("sum"); :}
+;

@@ -1,0 +1,46 @@
+use nano
+;
+
+select ship,battle from Outcomes where result='sunk'
+;
+
+select name, displacement, numGuns
+	from Classes as x, Ships as y, Outcomes as z
+	where z.battle='Guadalcanal' and z.ship=y.name and y.class=x.class
+	order by name, displacement, numGuns
+;
+
+select country from Classes group by country having count(type)>1
+;
+
+select sum(numGuns) from Classes,Ships where Classes.class=Ships.class group by country
+;
+
+select distinct Ships.class  from Outcomes ,Ships
+	where Outcomes.ship=Ships.name and Outcomes.result='sunk' order by Ships.class
+;
+
+select Ships.name from Ships ,Classes
+	where bore=16 and  Ships.class=Classes.class order by Ships.name
+;
+
+select avg(numGuns) from Classes,Ships
+	where Ships.class=Classes.class and Classes.type='battleship'
+;
+
+select class,min(launched) from Ships group by class order by class
+;
+
+select country from Classes ,Ships
+	where Classes.class=Ships.class
+	group by country
+	having sum(numGuns)>=
+		all(select sum(numGuns) from Classes,Ships where Classes.class=Ships.class group by country)
+	order by country
+;
+
+select class from Classes
+	where (select count(class) from Ships,Outcomes
+		where Ships.class=Classes.class and Ships.name=Outcomes.ship and Outcomes.result='sunk')>=3
+	order by class
+;

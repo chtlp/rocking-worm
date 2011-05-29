@@ -1,0 +1,21 @@
+use nano
+;
+
+update Classes set numGuns=numGuns+1 where type='battlecruiser'
+;
+
+select * from Classes
+;
+
+use nano
+;
+
+select avg(numGuns) from Classes,Ships
+	where Ships.class=Classes.class and Classes.type='battleship'
+; 
+
+use nano
+;
+
+select class,min(launched) from Ships group by class order by class
+;

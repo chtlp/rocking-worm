@@ -1,0 +1,8 @@
+use nano
+;
+
+select class from Classes
+	where (select count(class) from Ships,Outcomes
+		where Ships.class=Classes.class and Ships.name=Outcomes.ship and Outcomes.result='sunk')>0
+	order by class
+;

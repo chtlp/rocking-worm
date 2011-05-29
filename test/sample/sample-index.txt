@@ -1,0 +1,10 @@
+use nano
+;
+
+create index idx0 on Classes(class)
+;
+
+select name, numGuns
+from Classes, Ships
+where Classes.class = Ships.class
+;

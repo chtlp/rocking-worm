@@ -1,0 +1,8 @@
+#SELECT MODEL110.is_mutagen,MODEL110.lumo, count(distinct MODEL110.model_id ) FROM MODEL MODEL110, BOND BOND111  WHERE MODEL110.model_id=BOND111.model_id group by MODEL110.lumo , MODEL110.is_mutagen order by MODEL110.is_mutagen ASC, MODEL110.lumo ASC
+F -2 17
+F -1 46
+T -4 1
+T -3 14
+T -2 81
+T -1 29
+;

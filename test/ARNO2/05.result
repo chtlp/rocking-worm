@@ -1,0 +1,8 @@
+#SELECT MODEL2.is_mutagen,MODEL2.lumo, count(distinct MODEL2.model_id ) FROM MODEL MODEL2, ATOM ATOM3  WHERE MODEL2.model_id=ATOM3.model_id group by MODEL2.lumo , MODEL2.is_mutagen order by MODEL2.is_mutagen ASC, MODEL2.lumo ASC
+F -2 17
+F -1 46
+T -4 1
+T -3 14
+T -2 81
+T -1 29
+;

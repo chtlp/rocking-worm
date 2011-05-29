@@ -1,0 +1,31 @@
+@NEW_THREAD
+use nano
+;
+
+update Classes set numGuns=numGuns+1 where type='battlecruiser'
+;
+
+@UN_ORDERED_SELECT
+select * from Classes
+;
+
+# ---------------
+
+@NEW_THREAD
+use nano
+;
+
+@UN_ORDERED_SELECT
+select avg(numGuns) from Classes,Ships
+	where Ships.class=Classes.class and Classes.type='battleship'
+; 
+
+# ---------------
+
+@NEW_THREAD
+use nano
+;
+
+@ORDERED_SELECT
+select class,min(launched) from Ships group by class order by class
+;
