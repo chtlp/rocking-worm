@@ -31,8 +31,6 @@ public class BackEndTestEngineLoad {
 		// System.out.println("initialzing database...");
 		new File("myApp.log").delete();
 
-		new File(Constant.LoggingFile).delete();
-
 		Config.load("test1.config");
 
 		String dataFileName = Config.getDataFile();
