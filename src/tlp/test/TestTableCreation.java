@@ -14,6 +14,8 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Scanner;
 
+import logging.LogManager;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,6 +27,7 @@ import table.TableManager;
 import tlp.util.Debug;
 import transaction.Transaction;
 import util.Config;
+import util.Counter;
 import value.StrValue;
 import value.Value;
 import filesystem.BufferManager;
@@ -110,48 +113,52 @@ public class TestTableCreation {
 		
 //		System.exit(0);
 		
-		TableIterator iter = words.getRecords(tr);
-		
-		int k = 0;
-		for(iter.open(); iter.hasNext();) {
-			Record r = iter.next();
-			System.out.println(r);
-			++k;
-		}
-		iter.close();
-		assertEquals(N, k);
-		
-		Index scan = words.getScanIndex(tr);
-		for(String w : queries) {
-			assert scan.find(new StrValue(w)) != null : String.format("%s not found", w);
-		}
-		
-		for(String w : deletion) {
-			Record r = new Record();
-			r.addValue(new StrValue(w));
-			assert scan.removeUnique(tr, r) : r.getValue(0).get();
-			Debug.testLight.debug("{} removed", w);
-		}
-		
-		for(String w : queries) {
-			assert (scan.find(new StrValue(w)) != null) != deletion.contains(w);
-		}
-		
-		for(String w : deletion) {
-			Record r = new Record();
-			r.addValue(new StrValue(w));
-			scan.add(tr, r);
-			Debug.testLight.debug("{} inserted", w);
-		}
-		
-		for(String w : queries) {
-			assert scan.find(new StrValue(w)) != null : String.format("%s not found", w);
-		}
-		
-		tr.commit();
+//		TableIterator iter = words.getRecords(tr);
+//		
+//		int k = 0;
+//		for(iter.open(); iter.hasNext();) {
+//			Record r = iter.next();
+//			System.out.println(r);
+//			++k;
+//		}
+//		iter.close();
+//		assertEquals(N, k);
+//		
+//		Index scan = words.getScanIndex(tr);
+//		for(String w : queries) {
+//			assert scan.find(new StrValue(w)) != null : String.format("%s not found", w);
+//		}
+//		
+//		for(String w : deletion) {
+//			Record r = new Record();
+//			r.addValue(new StrValue(w));
+//			assert scan.removeUnique(tr, r) : r.getValue(0).get();
+//			Debug.testLight.debug("{} removed", w);
+//		}
+//		
+//		for(String w : queries) {
+//			assert (scan.find(new StrValue(w)) != null) != deletion.contains(w);
+//		}
+//		
+//		for(String w : deletion) {
+//			Record r = new Record();
+//			r.addValue(new StrValue(w));
+//			scan.add(tr, r);
+//			Debug.testLight.debug("{} inserted", w);
+//		}
+//		
+//		for(String w : queries) {
+//			assert scan.find(new StrValue(w)) != null : String.format("%s not found", w);
+//		}
+//		
+//		tr.commit();
 
-		words.printTable(System.out);
+//		words.printTable(System.out);
 
-		BufferManager.flushAll();
+//		BufferManager.checkBufferStatus();
+//		BufferManager.flushAll();
+		
+		System.out.format("write back count: %s\n",Counter.getCounter("write-back-counter").get());
+		System.out.format("log write: %s\n", LogManager.countFlush);
 	}
 }

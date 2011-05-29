@@ -7,6 +7,7 @@ import logging.LogManager;
 import table.Storable;
 import tlp.util.Debug;
 import transaction.Transaction;
+import util.Counter;
 import value.BytesValue;
 import value.IntValue;
 import value.Value;
@@ -369,8 +370,10 @@ public final class Page extends Cachable {
 		pos += obj.byteLength();
 	}
 
+	Counter writeCount = Counter.getCounter("write-back-counter");
 	public void writeBack() {
 		if (dirty.get()) {
+			writeCount.inc();
 			LogManager.flushAll();
 			FileStorage.writeBack(pageID, data);
 		}

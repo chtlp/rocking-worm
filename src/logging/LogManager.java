@@ -167,7 +167,7 @@ public class LogManager implements Iterable<BasicLogRecord> {
 		return currentblk.number();
 	}
 
-	static int countFlush = 0;
+	public static int countFlush = 0;
 
 	/**
 	 * Writes the current page to the log file.
