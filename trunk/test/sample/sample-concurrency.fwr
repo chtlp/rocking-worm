@@ -1,0 +1,26 @@
+@NEW_THREAD
+# select * from Classes
+Bismarck	battleship	Germany	8	15	42000
+Iowa	battleship	USA	9	16	46000
+Kongo	battlecruiser	Japan	10	14	32000
+North Carolina	battleship	USA	9	16	37000
+Renown	battlecruiser	Gt. Britain	8	15	32000
+Revenge	battleship	Gt. Britain	8	15	29000
+Tennessee	battleship	USA	12	14	32000
+Yamato	battleship	Japan	9	18	65000
+;
+@NEW_THREAD
+# select avg(numGuns) from Classes,Ships
+# where Ships.class=Classes.class and Classes.type='battleship'
+9
+;
+@NEW_THREAD
+# select class,min(launched) from Ships group by class order by class
+Iowa	1943
+Kongo	1913
+North Carolina	1941
+Renown	1916
+Revenge	1916
+Tennessee	1920
+Yamato	1941
+;
