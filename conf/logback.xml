@@ -34,7 +34,7 @@
   <logger name="TestLogger.testLight2" level="OFF"/>  
   <logger name="lq.transaction.TableLock" level="OFF"/>
   <logger name="lq.logging.LogManager" level="OFF"/>
-  <logger name="lq.logging.LogRecord" level="DEBUG"/>
+  <logger name="lq.logging.LogRecord" level="OFF"/>
   <logger name="lq.jdbc" level="OFF"/>
-  <logger name="lq.logging.Recovery" level="DEBUG"/>
+  <logger name="lq.logging.Recovery" level="OFF"/>
 </configuration>
