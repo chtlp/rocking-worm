@@ -41,11 +41,11 @@ public class TestEngine {
 		// System.out.println("finish database initialzing");
 
 		//String[] files = new String[] { "./test/ATIS/create.txt",
-		//		"./test/ATIS/insert.txt", "./test/ATIS/query1.txt" };
-		//String[] files = new String[] { "./test/sample/sample-create.txt",
-		//"./test/sample/temp2.txt"};
-		String[] files = new String[] { "./test/test3/test3-create.txt",
-				"./test/test3/test3-insert.txt", "./test/test3/test3-success.txt"};
+		//		"./test/ATIS/insert.txt", "./test/ATIS/query17.txt" };
+		String[] files = new String[] { "./test/sample/sample-create.txt",
+		"./test/sample/sample-concurrency.txt"};
+		//String[] files = new String[] { "./test/test3/test3-create.txt",
+		//		"./test/test3/test3-insert.txt", "./test/test3/test3-success.txt"};
 
 		int testcase = 0;
 		for (String fileName : files) {

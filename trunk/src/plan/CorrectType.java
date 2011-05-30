@@ -1,11 +1,14 @@
 package plan;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import value.*;
 
 public class CorrectType {
-	@SuppressWarnings("deprecation")
+	static SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	public static Value trans(Value value, int type) {
 		if (type == Value.TYPE_INT) {
 			if (value instanceof IntValue)
@@ -45,7 +48,13 @@ public class CorrectType {
 			if (value instanceof DateTimeValue)
 				return value;
 			if (value instanceof StrValue) {
-				return new DateTimeValue(new Date(((StrValue) value).get()));
+				String s = ((StrValue) value).get();
+				try {
+					return new DateTimeValue(formatter.parse(s));
+				} catch (ParseException e) {
+					System.out.println("DATETIME ERROR");
+					e.printStackTrace();
+				}
 			}
 		}
 		return value;

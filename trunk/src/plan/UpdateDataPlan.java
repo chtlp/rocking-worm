@@ -45,11 +45,12 @@ public class UpdateDataPlan extends UpdatePlan {
 			int idx = new Col2Idx().getIdx(tempPlan.alias, ul.head);
 			value.Value value = new ValueInterpreter().transValue(ul.value,
 					tempPlan.alias, tempPlan.columns, record, null, tr);
-			value = CorrectType.trans(value, idx);
+			value = CorrectType.trans(value, tempPlan.columns.get(idx).getType());
+			System.out.println(tempPlan.columns.get(idx).getType());
 			table.Record newRecord = new table.Record(record);
 			newRecord.getValue(idx).set(value.get());
-			//System.out.println("old " + record);
-			//System.out.println("new " + newRecord);
+			System.out.println("old " + record);
+			System.out.println("new " + newRecord);
 			table.update(tr, record, newRecord);
 			ul = ul.tail;
 		}
