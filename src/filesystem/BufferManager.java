@@ -224,7 +224,7 @@ public class BufferManager {
 		for(Page p : buffer.values()) {
 			p.writeBack();
 		}
-		LogManager.flushAll();
+//		LogManager.flushAll();
 	}
 	
 	public static void cleanUp(Transaction tr) {

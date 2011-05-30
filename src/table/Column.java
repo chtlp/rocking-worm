@@ -13,6 +13,9 @@ import filesystem.GlobalStringPool;
 
 public class Column implements Storable {
 
+	public void setType(int ty) {
+		type = ty;
+	}
 	public int getType() {
 		return type;
 	}

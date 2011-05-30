@@ -1018,7 +1018,7 @@ public class lexer implements java_cup.runtime.Scanner {
           }
         case 138: break;
         case 3: 
-          { return tok(sym.ID, yytext());
+          { return tok(sym.ID, yytext().toLowerCase());
           }
         case 139: break;
         case 19: 
