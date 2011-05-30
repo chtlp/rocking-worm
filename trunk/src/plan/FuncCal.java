@@ -44,7 +44,7 @@ public class FuncCal {
 			break;
 		case parser.Func.SUM:
 			ans = f;
-			break;
+			return new value.FloatValue((float) ans);
 		}
 		if (isInt)
 			return new value.IntValue((int) ans);
