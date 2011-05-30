@@ -17,7 +17,7 @@ public class SelectPlan extends QueryPlan {
 	parser.SelectExprList selectExprList;
 	boolean distinct;
 	boolean flag = true;
-	HashSet<Integer> recordHash = new HashSet<Integer>();
+	HashMap<Integer, HashSet<String>> recordHash = new HashMap<Integer, HashSet<String>>();
 	HashMap<parser.FuncValue, FuncCal> funcMap = new HashMap<parser.FuncValue, FuncCal>();
 	Tail tail;
 
@@ -146,10 +146,34 @@ public class SelectPlan extends QueryPlan {
 				rv = new Record(rv, tail.record);
 			ret = getValues(rv);
 		} while (!condition.check(fromAlias, fromCols, rv, null)
-				|| (distinct && recordHash.contains(ret.distinctCode())));
+				|| (distinct && !checkHash(ret)));
 		if (distinct)
-			recordHash.add(ret.distinctCode());
+			add2Bucket(ret);
 		return ret;
+	}
+
+	boolean checkHash(Record record) {
+		String tmp = record.shortString();
+		int hashCode = tmp.hashCode();
+		HashSet<String> records = recordHash.get(hashCode);
+		if (records == null)
+			return true;
+		for (String r : records) {
+			if (r.equals(tmp))
+				return false;
+		}
+		return true;
+
+	}
+
+	void add2Bucket(Record record) {
+		String tmp = record.shortString();
+		int hashCode = tmp.hashCode();
+		HashSet<String> records = recordHash.get(hashCode);
+		if (records == null)
+			records = new HashSet<String>();
+		records.add(tmp);
+		recordHash.put(hashCode, records);
 	}
 
 }
