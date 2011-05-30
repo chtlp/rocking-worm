@@ -44,12 +44,13 @@ public class BackEndTestEngine {
 		// System.out.println("finish database initialzing");
 
 		// String[] files = new String[] { "./test/ARNO2/create_tables.txt",
-		// "./test/ARNO2/insert_ATOM.txt"};
+		// "./test/ARNO2/insert_ATOM.txt", "./test/ARNO2/insert_BOND.txt",
+		// "./test/ARNO2/insert_MODEL.txt"};
 
 		String[] files = new String[] { "./test/sample/sample-create.txt",
 				"./test/sample/sample-select.txt",
-//				"./test/sample/sample-index.txt",
-//				"./test/sample/sample-concurrency.txt" 
+				"./test/sample/sample-index.txt",
+				"./test/sample/sample-concurrency.txt",
 				};
 
 		for (String fileName : files) {
@@ -80,13 +81,13 @@ public class BackEndTestEngine {
 			}
 
 			tr.commit();
-			
-			TableManager.printAllTables();
+
+			// TableManager.printAllTables();
 		}
 
 		// BufferManager.flushAll();
 
-//		TableManager.printAllTables();
+		// TableManager.printAllTables();
 	}
 
 }

@@ -5,6 +5,8 @@ import java.util.HashSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import filesystem.BufferManager;
+
 public class Recovery {
 	private static Logger logger = LoggerFactory.getLogger("lq.logging.Recovery");
 	private static HashSet<Integer> commitX = new HashSet<Integer>();
@@ -21,7 +23,7 @@ public class Recovery {
 		scan();
 		redo();
 		undo();
-		
+		BufferManager.flushAll();
 		LogManager.getInstance().clear();
 	}
 
