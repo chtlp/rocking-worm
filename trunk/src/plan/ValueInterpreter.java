@@ -143,6 +143,11 @@ public class ValueInterpreter {
 		if (pvalue instanceof parser.FuncValue) {
 			parser.FuncValue fv = (parser.FuncValue) pvalue;
 			int idx = new Col2Idx().getIdx(alias, fv.colName);
+			if (fv.func.type == fv.func.AVG) {
+				Column c = new Column(columns.get(idx));
+				c.setType(value.Value.TYPE_FLOAT);
+				return c;
+			}
 			return columns.get(idx);
 		}
 		return null;

@@ -1,6 +1,7 @@
 package plan;
 
 import table.Record;
+import value.FloatValue;
 
 public class FuncCal {
 
@@ -32,7 +33,7 @@ public class FuncCal {
 		switch (functype) {
 		case parser.Func.AVG:
 			ans = f / count;
-			break;
+			return new value.FloatValue((float) ans);
 		case parser.Func.COUNT:
 			return new value.IntValue(count);
 		case parser.Func.MAX:
