@@ -2,6 +2,7 @@ package value;
 
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import transaction.Transaction;
@@ -44,7 +45,7 @@ public class DateTimeValue extends Value {
 		return res;
 	}
 	
-	static DateFormat formatter = DateFormat.getInstance();
+	static SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	@Override
 	public int compareTo(Value o) {

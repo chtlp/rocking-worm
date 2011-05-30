@@ -48,9 +48,8 @@ public class UpdateDataPlan extends UpdatePlan {
 			value = CorrectType.trans(value, tempPlan.columns.get(idx).getType());
 			System.out.println(tempPlan.columns.get(idx).getType());
 			table.Record newRecord = new table.Record(record);
-			newRecord.getValue(idx).set(value.get());
-			System.out.println("old " + record);
-			System.out.println("new " + newRecord);
+
+			newRecord.setValue(idx, value);
 			table.update(tr, record, newRecord);
 			ul = ul.tail;
 		}

@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import logging.Recovery;
+
 import org.junit.Test;
 
 import table.Table;
@@ -31,17 +33,9 @@ public class TestLoadingDatabase {
 		// new File(dataFileName).delete();
 
 		FileStorage.loadFile(dataFileName);
+		Recovery.recover();
 		FileStorage.init();
 
-		// Transaction tr = FileStorage.newSystemTransaction();
-		// TableManager.createDatabase(tr, "test2");
-		//
-		// for (int i = 0; i < numThreads; ++i) {
-		// Table words = TableManager.getTable(tr, "words" + i);
-		// words.printTable(System.out);
-		// }
-
-		// tr.commit();
 
 		TableManager.printAllTables();
 

@@ -39,13 +39,16 @@ public class BackEndTestEngineLoad {
 		FileStorage.loadFile(dataFileName);
 		Recovery.recover();
 		FileStorage.init();
+		
+		TableManager.printAllTables();
+
 		// System.out.println("finish database initialzing");
 
 		// String[] files = new String[] { "./test/ARNO2/create_tables.txt",
 		// "./test/ARNO2/insert_ATOM.txt"};
 
-		String[] files = new String[] { "./test/sample/sample-select.txt" };
-
+		String[] files = new String[] { "./test/sample/sample-select.txt",
+				"./test/sample/sample-concurrency.txt" };
 		for (String fileName : files) {
 			parser p = new parser(new lexer(new FileInputStream(fileName)));
 			AbsynList result = (AbsynList) p.parse().value;
@@ -62,8 +65,8 @@ public class BackEndTestEngineLoad {
 					table.Record record = null;
 					do {
 						record = qPlan.next();
-						 if (record != null)
-						 System.out.println("# " + record.shortString());
+						if (record != null)
+							System.out.println("# " + record.shortString());
 					} while (record != null);
 					qPlan.close();
 
@@ -76,9 +79,9 @@ public class BackEndTestEngineLoad {
 			tr.commit();
 		}
 
-//		BufferManager.flushAll();
+		// BufferManager.flushAll();
 
-		TableManager.printAllTables();
+		//TableManager.printAllTables();
 	}
 
 }
