@@ -43,6 +43,12 @@ public class FloatValue extends Value {
 		// null is the smallest
 		if (o == null)
 			return 1;
+		
+		if (o instanceof StrValue) {
+			StrValue s = (StrValue)o;
+			Float d = Float.valueOf(s.value);
+			return f.compareTo(d);
+		}
 
 		if (o instanceof FloatValue) {
 			FloatValue other = (FloatValue) o;

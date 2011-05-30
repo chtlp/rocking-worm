@@ -41,6 +41,11 @@ public class DecimalValue extends Value {
 	public int compareTo(Value o) {
 		// null is the smallest
 		if (o == null) return 1;
+		
+		if (o instanceof StrValue) {
+			StrValue s = (StrValue)o;
+			return new BigDecimal(numStr).compareTo(new BigDecimal(s.value));
+		}
 		DecimalValue other = (DecimalValue) o;
 		return new BigDecimal(numStr).compareTo(new BigDecimal(other.numStr));
 	}

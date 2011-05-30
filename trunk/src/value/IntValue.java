@@ -55,6 +55,12 @@ public class IntValue extends Value {
 		if (o == null)
 			return 1;
 
+		if (o instanceof StrValue) {
+			StrValue s = (StrValue)o;
+			Double d = Double.parseDouble(s.value);
+			return -d.compareTo(new Double(value));
+		}
+		
 		if (o instanceof IntValue) {
 			IntValue other = (IntValue) o;
 			return value.compareTo(other.value);
