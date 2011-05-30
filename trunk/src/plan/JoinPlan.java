@@ -39,6 +39,7 @@ public class JoinPlan extends QueryPlan {
 
 	@Override
 	public Record next() throws DeadlockException, TimeoutException {
+		if (r1 == null) return null;
 		r2 = queryPlan2.next();
 		if (r2 == null) {
 			r1 = queryPlan1.next();
