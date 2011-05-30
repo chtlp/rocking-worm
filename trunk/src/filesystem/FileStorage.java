@@ -10,7 +10,6 @@ import java.nio.channels.NonWritableChannelException;
 import table.TableManager;
 import tlp.util.Debug;
 import transaction.Transaction;
-import util.Constant;
 
 public class FileStorage {
 
@@ -67,7 +66,6 @@ public class FileStorage {
 		RowIdIndex.init(ROW_INDEX_ROOT);
 		GlobalStringPool.init(STRING_POOL_INDEX_ROOT);
 		TableManager.init(TABLE_INDEX_ROOT);
-		Constant.initialize();
 		
 	}
 	

@@ -1,6 +1,5 @@
 package jdbc;
 
-import java.io.File;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
@@ -21,8 +20,8 @@ public class Startup {
 		// initialize database
 		System.out.println("initialzing database...");
 
-		Config.load("jdbc.config");
-		new File(Config.getLogFile()).delete();
+		Config.load("rockingworm.config");
+		Constant.initialize();
 
 		String dataFileName = Config.getDataFile();
 
