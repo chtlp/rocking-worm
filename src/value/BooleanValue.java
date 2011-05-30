@@ -24,6 +24,11 @@ public class BooleanValue extends Value {
 		// null is the smallest
 		if (o == null)
 			return 1;
+		if (o instanceof StrValue) {
+			StrValue s = (StrValue)o;
+			return value.compareTo(Boolean.parseBoolean(s.value));
+		}
+		
 		assert o != null && o instanceof BooleanValue;
 		BooleanValue other = (BooleanValue) o;
 		return value.compareTo(other.value);

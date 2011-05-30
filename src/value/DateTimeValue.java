@@ -1,5 +1,7 @@
 package value;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.Date;
 
 import transaction.Transaction;
@@ -41,11 +43,25 @@ public class DateTimeValue extends Value {
 		}
 		return res;
 	}
+	
+	static DateFormat formatter = DateFormat.getInstance();
 
 	@Override
 	public int compareTo(Value o) {
 		// null is the smallest
 		if (o == null) return 1;
+		
+		if (o instanceof StrValue) {
+			StrValue s = (StrValue)o;
+			int r = 0;
+			try {
+				r = value.compareTo(formatter.parse(s.value));
+			}
+			catch (ParseException e) {
+				System.err.format("fail to compare %s and %s \n", value, s);
+			}
+			return r;
+		}
 		DateTimeValue other = (DateTimeValue) o;
 		return value.compareTo(other.value);
 	}

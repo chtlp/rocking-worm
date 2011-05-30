@@ -102,6 +102,10 @@ public class StrValue extends Value {
 		// null is the smallest
 		if (o == null) return 1;
 
+		if (!(o instanceof StrValue)) {
+			return -o.compareTo(this);
+		}
+		
 		StrValue other = (StrValue) o;
 
 		int len = Math.min(value.length(), other.value.length());
