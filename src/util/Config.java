@@ -38,8 +38,8 @@ public class Config {
 		return get("DataFile");
 	}
 	
-	public static String getLogFile() {
-		return get("LogFile");
+	public static String getLoggingFile() {
+		return get("LoggingFile");
 	}
 	
 	public static int getTimedOut() {
