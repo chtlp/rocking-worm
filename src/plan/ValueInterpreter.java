@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.TimeoutException;
 
+import parser.Func;
 import parser.FuncValue;
 import parser.Value;
 import table.Column;
@@ -143,7 +144,12 @@ public class ValueInterpreter {
 		if (pvalue instanceof parser.FuncValue) {
 			parser.FuncValue fv = (parser.FuncValue) pvalue;
 			int idx = new Col2Idx().getIdx(alias, fv.colName);
-			if (fv.func.type == fv.func.AVG) {
+			if (fv.func.type == Func.AVG) {
+				Column c = new Column(columns.get(idx));
+				c.setType(value.Value.TYPE_FLOAT);
+				return c;
+			}
+			if (fv.func.type == Func.SUM) {
 				Column c = new Column(columns.get(idx));
 				c.setType(value.Value.TYPE_FLOAT);
 				return c;
