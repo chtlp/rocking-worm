@@ -123,6 +123,7 @@ public class Planner {
 						if (constValue != null) {
 							defaultValue = new ConstValueInterpreter()
 									.trans(constValue);
+							defaultValue = CorrectType.trans(defaultValue, ty);
 						}
 					}
 				}
@@ -182,6 +183,7 @@ public class Planner {
 
 				if (v == null)
 					v = table.getColumn(i).getDefaultValue();
+				v = CorrectType.trans(v, table.getColumn(i).getType());
 				record.addValue(v);
 			}
 
@@ -191,10 +193,13 @@ public class Planner {
 			while (vl != null) {
 				parser.Value v = vl.head;
 				parser.ConstValue cv = (parser.ConstValue) v;
+				value.Value vt;
 				if (cv instanceof parser.DefaultConstValue)
-					record.addValue(table.getColumn(i).getDefaultValue());
+					vt = table.getColumn(i).getDefaultValue();
 				else
-					record.addValue(new plan.ConstValueInterpreter().trans(cv));
+					vt = new plan.ConstValueInterpreter().trans(cv);
+				vt = CorrectType.trans(vt, table.getColumn(i).getType());
+				record.addValue(vt);
 				vl = vl.tail;
 				i++;
 			}
@@ -317,7 +322,7 @@ public class Planner {
 		/*
 		 * Brute Join
 		 */
-		//fromPlan = translate(hasFrom, tr, tail);
+		fromPlan = translate(hasFrom, tr, tail);
 		/*
 		 * End of the Brute Methods
 		 */
@@ -325,6 +330,7 @@ public class Planner {
 		/*
 		 * Apply Hash Join
 		 */
+		/*
 		parser.TblRefList trl = hasFrom.trl;
 
 		hashfromPlans.clear();
@@ -373,6 +379,7 @@ public class Planner {
 								tr);
 				}
 		}
+		*/
 
 		/*
 		 * End of the Application of Hash Join

@@ -45,6 +45,7 @@ public class UpdateDataPlan extends UpdatePlan {
 			int idx = new Col2Idx().getIdx(tempPlan.alias, ul.head);
 			value.Value value = new ValueInterpreter().transValue(ul.value,
 					tempPlan.alias, tempPlan.columns, record, null, tr);
+			value = CorrectType.trans(value, idx);
 			table.Record newRecord = new table.Record(record);
 			newRecord.getValue(idx).set(value.get());
 			//System.out.println("old " + record);
