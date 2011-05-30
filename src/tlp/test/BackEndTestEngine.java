@@ -23,14 +23,14 @@ import filesystem.FileStorage;
 public class BackEndTestEngine {
 
 	public static void main(String[] args) throws Exception {
-//		String fileName = "create.txt";
-//		if (args.length > 0) {
-//			fileName = args[0];
-//		}
+		// String fileName = "create.txt";
+		// if (args.length > 0) {
+		// fileName = args[0];
+		// }
 
-		//System.out.println("initialzing database...");
+		// System.out.println("initialzing database...");
 		new File("myApp.log").delete();
-		
+
 		new File(Constant.LoggingFile).delete();
 
 		Config.load("test1.config");
@@ -41,11 +41,16 @@ public class BackEndTestEngine {
 		FileStorage.loadFile(dataFileName);
 		Recovery.recover();
 		FileStorage.init();
-		//System.out.println("finish database initialzing");
+		// System.out.println("finish database initialzing");
 
-//		String[] files = new String[] { "./test/ARNO2/create_tables.txt", "./test/ARNO2/insert_ATOM.txt"};
-		
-		String[] files = new String[] { "./test/sample/sample-create.txt" };
+		// String[] files = new String[] { "./test/ARNO2/create_tables.txt",
+		// "./test/ARNO2/insert_ATOM.txt"};
+
+		String[] files = new String[] { "./test/sample/sample-create.txt",
+				"./test/sample/sample-select.txt",
+//				"./test/sample/sample-index.txt",
+//				"./test/sample/sample-concurrency.txt" 
+				};
 
 		for (String fileName : files) {
 			parser p = new parser(new lexer(new FileInputStream(fileName)));
@@ -58,15 +63,16 @@ public class BackEndTestEngine {
 
 				Plan plan = Planner.translate(absyn, tr);
 				if (plan instanceof QueryPlan) {
-					QueryPlan qPlan = (QueryPlan)plan;
+					QueryPlan qPlan = (QueryPlan) plan;
 					qPlan.open();
 					table.Record record = null;
 					do {
 						record = qPlan.next();
-						if (record != null) System.out.println("# " + record.shortString());
+						if (record != null)
+							System.out.println("# " + record.shortString());
 					} while (record != null);
 					qPlan.close();
-										
+
 				} else {
 					((UpdatePlan) plan).run();
 				}
@@ -74,11 +80,13 @@ public class BackEndTestEngine {
 			}
 
 			tr.commit();
+			
+			TableManager.printAllTables();
 		}
 
-//		BufferManager.flushAll();
+		// BufferManager.flushAll();
 
-		TableManager.printAllTables();
+//		TableManager.printAllTables();
 	}
 
 }
