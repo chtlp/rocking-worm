@@ -190,6 +190,7 @@ public class RecordList {
 	}
 
 	public void free() {
+		if (currentPage != null)
 		currentPage.release(tr);
 
 		Page p = BufferManager.getPage(tr, head.getPageID());
