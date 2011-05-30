@@ -322,7 +322,7 @@ public class Planner {
 		/*
 		 * Brute Join
 		 */
-		fromPlan = translate(hasFrom, tr, tail);
+		//fromPlan = translate(hasFrom, tr, tail);
 		/*
 		 * End of the Brute Methods
 		 */
@@ -330,7 +330,7 @@ public class Planner {
 		/*
 		 * Apply Hash Join
 		 */
-		/*
+		
 		parser.TblRefList trl = hasFrom.trl;
 
 		hashfromPlans.clear();
@@ -379,7 +379,7 @@ public class Planner {
 								tr);
 				}
 		}
-		*/
+		
 
 		/*
 		 * End of the Application of Hash Join
