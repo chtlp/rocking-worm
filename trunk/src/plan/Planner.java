@@ -3,6 +3,10 @@ package plan;
 import java.util.ArrayList;
 import java.util.concurrent.TimeoutException;
 
+import parser.ColNameValue;
+import parser.TblRef;
+import parser.TblRefList;
+
 import table.Column;
 import table.Table;
 import table.TableManager;
@@ -238,6 +242,63 @@ public class Planner {
 		return new DropIndexPlan(table, diAbsyn.indexName, tr);
 	}
 
+	static void checkHashApp(parser.BoolExpr be, TblRefList trl) {
+		if (be == null) {
+			hashflag = false;
+			return;
+		}
+		if (be instanceof parser.CopValue) {
+			parser.CopValue cvbe = (parser.CopValue) be;
+			if (cvbe.cop.type != parser.Cop.Eq
+					|| !(cvbe.valueL instanceof parser.ColNameValue)
+					|| !(cvbe.valueR instanceof parser.ColNameValue))
+				return;
+			parser.ColNameValue left = (parser.ColNameValue) cvbe.valueL;
+			parser.ColNameValue right = (parser.ColNameValue) cvbe.valueR;
+			int i = 0, il = -1, ir = -1, idxl = -1, idxr = -1;
+			TblRefList tmp = trl;
+			int idx;/*
+			System.out.println(left.colName.tblName);
+			System.out.println(right.colName.tblName);
+			System.out.println(left.colName.colName);
+			System.out.println(right.colName.colName);*/
+			while (tmp != null) {
+				idx = new Col2Idx().getIdx(hashfromPlans.get(i).alias, left.colName);
+				if (idx != -1) {
+					il = i;
+					idxl = idx;
+				}
+				idx = new Col2Idx().getIdx(hashfromPlans.get(i).alias, right.colName);
+				if (idx != -1) {
+					ir = i;
+					idxr = idx;
+				}
+				tmp = tmp.tail;
+				i++;
+			}/*
+			System.out.println(il);
+			System.out.println(ir);
+			System.out.println(idxl);
+			System.out.println(idxr);*/
+			if (il != -1 && ir != -1) {
+				hashAval.add(il);
+				hashAval.add(ir);
+				hashCols.add(idxl);
+				hashCols.add(idxr);
+			}
+		} else if (be instanceof parser.AndBoolExpr) {
+			parser.AndBoolExpr abebe = (parser.AndBoolExpr) be;
+			checkHashApp(abebe.left, trl);
+			checkHashApp(abebe.right, trl);
+		} else
+			hashflag = false;
+	}
+
+	static boolean hashflag;
+	static ArrayList<QueryPlan> hashfromPlans = new ArrayList<QueryPlan>();
+	static ArrayList<Integer> hashAval = new ArrayList<Integer>();
+	static ArrayList<Integer> hashCols = new ArrayList<Integer>();
+
 	static QueryPlan translate(parser.Select selectAbsyn, Transaction tr,
 			Tail tail) throws DeadlockException, TimeoutException {
 		parser.HasFrom hasFrom = selectAbsyn.hasFrom;
@@ -252,7 +313,71 @@ public class Planner {
 		if (hasHaving != null)
 			hasOrder = hasHaving.hasOrder;
 
-		QueryPlan fromPlan = translate(hasFrom, tr, tail);
+		QueryPlan fromPlan = null;
+		/*
+		 * Brute Join
+		 */
+		//fromPlan = translate(hasFrom, tr, tail);
+		/*
+		 * End of the Brute Methods
+		 */
+
+		/*
+		 * Apply Hash Join
+		 */
+		parser.TblRefList trl = hasFrom.trl;
+
+		hashfromPlans.clear();
+		hashAval.clear();
+		hashCols.clear();
+		while (trl != null) {
+			parser.TblRef trf = trl.head;
+			QueryPlan p = translate(trf, tr, tail);
+			hashfromPlans.add(p);
+			trl = trl.tail;
+		}
+		if (hashfromPlans.size() == 1)
+			fromPlan = hashfromPlans.get(0);
+		else {
+			if (hasWhere != null) {
+				hashflag = true;
+				checkHashApp(hasWhere.be, hasFrom.trl);
+				System.out.println(hashAval.size());
+				if (hashflag && hashAval.size() > 0) {
+					for (int i = 0; i < hashAval.size() / 2; i++) {
+						QueryPlan p1 = hashfromPlans.get(hashAval.get(i * 2));
+						QueryPlan p2 = hashfromPlans.get(hashAval.get(i * 2 + 1));
+						if (p1 == null || p2 == null)
+							continue;
+						int c1 = hashCols.get(i * 2);
+						int c2 = hashCols.get(i * 2 + 1);
+						System.out.println(p1.alias.get(c1).getName());
+						System.out.println(p2.alias.get(c2).getName());
+						
+						HashJoinPlan hj = new HashJoinPlan(p1, p2, c1, c2, tr);
+						if (fromPlan == null)
+							fromPlan = hj;
+						else
+							fromPlan = new JoinPlan(fromPlan, hj, tr);
+						hashfromPlans.set(hashAval.get(i * 2), null);
+						hashfromPlans.set(hashAval.get(i * 2 + 1), null);
+					}
+				}
+			}
+			for (int i = 0; i < hashfromPlans.size(); i++)
+				if (hashfromPlans.get(i) != null) {
+					if (fromPlan == null)
+						fromPlan = hashfromPlans.get(i);
+					else
+						fromPlan = new JoinPlan(fromPlan, hashfromPlans.get(i),
+								tr);
+				}
+		}
+
+		/*
+		 * End of the Application of Hash Join
+		 */
+
 		Cond cond;
 		if (hasWhere != null)
 			cond = new Cond(hasWhere.be, tr);
