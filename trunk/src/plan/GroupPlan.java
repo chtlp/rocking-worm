@@ -159,7 +159,7 @@ public class GroupPlan extends QueryPlan {
 	public Record next() throws DeadlockException, TimeoutException {
 		if (having == null) {
 			Record n = nextRecord();
-			Debug.testSimple.debug("group plan returns {}", n);
+//			Debug.testSimple.debug("group plan returns {}", n);
 			return n;
 		}
 		else {

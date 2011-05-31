@@ -156,7 +156,7 @@ public class SelectPlan extends QueryPlan {
 		if (distinct)
 			add2Bucket(ret);
 		if (ret != null) ++counter;
-		Debug.testSimple.debug("select res {}", ret);
+//		Debug.testSimple.debug("select res {}", ret);
 		return ret;
 	}
 
