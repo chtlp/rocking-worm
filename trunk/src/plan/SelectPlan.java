@@ -7,6 +7,7 @@ import java.util.concurrent.TimeoutException;
 
 import table.Column;
 import table.Record;
+import tlp.util.Debug;
 import transaction.DeadlockException;
 import transaction.Transaction;
 
@@ -77,8 +78,10 @@ public class SelectPlan extends QueryPlan {
 
 	}
 
+	int counter = 0;
 	@Override
 	public void open() throws DeadlockException, TimeoutException {
+		counter = 0;
 		// System.out.println("selectplan opens");
 		queryPlan.open();
 		for (FuncCal funcCal : funcMap.values())
@@ -88,6 +91,7 @@ public class SelectPlan extends QueryPlan {
 
 	@Override
 	public void close() throws DeadlockException, TimeoutException {
+//		Debug.testSimple.debug("Select Plan result num {}", counter);
 		queryPlan.close();
 	}
 
@@ -132,6 +136,7 @@ public class SelectPlan extends QueryPlan {
 			} while (record != null);
 			Record ret = getValues(null);
 			flag = false;
+			if (ret != null) ++counter;
 			return ret;
 		}
 
@@ -149,6 +154,7 @@ public class SelectPlan extends QueryPlan {
 				|| (distinct && !checkHash(ret)));
 		if (distinct)
 			add2Bucket(ret);
+		if (ret != null) ++counter;
 		return ret;
 	}
 

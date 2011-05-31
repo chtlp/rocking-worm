@@ -3,6 +3,7 @@ package plan;
 import java.util.concurrent.TimeoutException;
 
 import table.Record;
+import tlp.util.Debug;
 import transaction.DeadlockException;
 import transaction.Transaction;
 
@@ -23,7 +24,7 @@ public class JoinPlan extends QueryPlan {
 
 	@Override
 	public void open() throws DeadlockException, TimeoutException {
-		//System.out.println("Joinplan opens");
+//		Debug.testSimple.debug("Joinplan opens");
 		queryPlan1.open();
 		queryPlan2.open();
 		r1 = queryPlan1.next();
@@ -49,6 +50,8 @@ public class JoinPlan extends QueryPlan {
 			r2 = queryPlan2.next();
 			if (r2 == null) return null;
 		}
-		return new Record(r1, r2);
+		Record r = new Record(r1, r2);
+//		Debug.testSimple.debug("Join next {}", r);
+		return r;
 	}
 }

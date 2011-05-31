@@ -32,6 +32,7 @@ public class HashJoinPlan extends QueryPlan {
 
 	@Override
 	public void open() throws DeadlockException, TimeoutException {
+//		Debug.testSimple.debug("Hash Join opens");
 		hj.open();
 
 	}
@@ -45,7 +46,7 @@ public class HashJoinPlan extends QueryPlan {
 	@Override
 	public Record next() throws DeadlockException, TimeoutException {
 		Record ret = hj.next();
-//		Debug.testJoin.debug("hash join result = {}", ret);
+//		Debug.testSimple.debug("hash join result = {}", ret);
 //		System.out.println(ret);
 		return ret;
 	}
