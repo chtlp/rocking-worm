@@ -77,7 +77,9 @@ public class Cond {
 				ebebe.plan = Planner.translate(ebebe.subquery, tr, new Tail(
 						record, alias, columns));
 			ebebe.plan.open();
-			return (ebebe.isExist != (ebebe.plan.next() == null));
+			boolean ret =  (ebebe.isExist != (ebebe.plan.next() == null));
+			ebebe.plan.close();
+			return ret;
 		}
 		if (be instanceof parser.AnyBoolExpr) {
 			parser.AnyBoolExpr abebe = (parser.AnyBoolExpr) be;
@@ -92,8 +94,10 @@ public class Cond {
 					break;
 				if (checkCop(new plan.ValueInterpreter().transValue(
 						abebe.value, alias, columns, record, funcMap, tr),
-						rv.getValue(0), abebe.cop.type))
+						rv.getValue(0), abebe.cop.type)) {
+					qPlan.close();
 					return true;
+				}
 			}
 			qPlan.close();
 			return false;
@@ -111,8 +115,10 @@ public class Cond {
 					break;
 				if (checkCop(rv.getValue(0),
 						new plan.ValueInterpreter().transValue(ibebe.value,
-								alias, columns, record, funcMap, tr), parser.Cop.Eq))
+								alias, columns, record, funcMap, tr), parser.Cop.Eq)) {
+					qPlan.close();
 					return true;
+				}
 			}
 			qPlan.close();
 			return false;
@@ -130,8 +136,10 @@ public class Cond {
 					break;
 				value.Value v = new plan.ValueInterpreter().transValue(
 						abebe.value, alias, columns, record, funcMap, tr);
-				if (!checkCop(v, rv.getValue(0), abebe.cop.type))
+				if (!checkCop(v, rv.getValue(0), abebe.cop.type)) {
+					qPlan.close();
 					return false;
+				}
 			}
 			qPlan.close();
 			return true;
