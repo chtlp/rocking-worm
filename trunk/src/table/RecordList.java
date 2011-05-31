@@ -175,8 +175,8 @@ public class RecordList {
 	public Record next() {
 		if (buffer == null)
 			loadBuffer();
-		Debug.testJoin.debug("RecordList current page {}",
-				currentPage.getPageID());
+//		Debug.testJoin.debug("RecordList current page {}",
+//				currentPage.getPageID());
 		Record ret = buffer;
 		buffer = null;
 		return ret;
@@ -198,7 +198,7 @@ public class RecordList {
 		while (true) {
 			int n = p.nextPage();
 			BufferManager.free(tr, p.getPageID());
-			Debug.testJoin.debug("ReordList frees page {}", p.getPageID());
+//			Debug.testJoin.debug("ReordList frees page {}", p.getPageID());
 			if (n == -1)
 				break;
 			p = BufferManager.getPage(tr, n);

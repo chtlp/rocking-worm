@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 import plan.QueryPlan;
+import tlp.util.Debug;
 import transaction.DeadlockException;
 import transaction.Transaction;
 import value.Value;
@@ -52,6 +53,7 @@ public class HashJoin {
 	int blocks;
 
 	public void open() throws DeadlockException, TimeoutException {
+		Debug.testJoin.debug("Hash Join opens");
 		blocks = numBlocks();
 		list1 = new RecordList[blocks];
 		list2 = new RecordList[blocks];
@@ -86,6 +88,12 @@ public class HashJoin {
 			}
 		}
 		p2.close();
+		
+		for(int i=0; i<blocks; ++i) {
+			Debug.testJoin.debug("list1[{}] size = {}", i, list1[i].size());
+			Debug.testJoin.debug("list2[{}] size = {}", i, list2[i].size());
+		}
+		
 	}
 
 	public boolean hasNext() {

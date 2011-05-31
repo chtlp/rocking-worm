@@ -3,6 +3,7 @@ package plan;
 import java.util.concurrent.TimeoutException;
 
 import table.Record;
+import tlp.util.Debug;
 import transaction.DeadlockException;
 import transaction.Transaction;
 
@@ -44,7 +45,8 @@ public class HashJoinPlan extends QueryPlan {
 	@Override
 	public Record next() throws DeadlockException, TimeoutException {
 		Record ret = hj.next();
-		System.out.println(ret);
+//		Debug.testJoin.debug("hash join result = {}", ret);
+//		System.out.println(ret);
 		return ret;
 	}
 

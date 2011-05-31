@@ -17,7 +17,7 @@ group by MODEL2.is_mutagen order by MODEL2.is_mutagen ASC
 @ORDERED_SELECT
 SELECT MODEL202.is_mutagen,MODEL202.is_mutagen, count( MODEL202.model_id ) 
 FROM MODEL as MODEL202  
-WHERE MODEL202.lumo=-2 
+WHERE MODEL202.lumo='-2' 
 group by MODEL202.is_mutagen
 order by MODEL202.is_mutagen ASC, MODEL202.is_mutagen ASC
 ;
@@ -25,7 +25,7 @@ order by MODEL202.is_mutagen ASC, MODEL202.is_mutagen ASC
 @ORDERED_SELECT
 SELECT MODEL202.is_mutagen,MODEL202.lumo, count( MODEL202.model_id ) 
 FROM MODEL as MODEL202 
-WHERE MODEL202.lumo=-2 
+WHERE MODEL202.lumo='-2' 
 group by MODEL202.lumo
 order by MODEL202.is_mutagen ASC, MODEL202.lumo ASC
 ;
@@ -33,7 +33,7 @@ order by MODEL202.is_mutagen ASC, MODEL202.lumo ASC
 @ORDERED_SELECT
 SELECT MODEL202.is_mutagen,MODEL202.lumo, count( MODEL202.model_id ) 
 FROM MODEL as MODEL202 
-WHERE MODEL202.lumo=-2 
+WHERE MODEL202.lumo='-2' 
 group by MODEL202.is_mutagen 
 order by MODEL202.is_mutagen ASC, MODEL202.lumo ASC
 ;
@@ -241,14 +241,14 @@ order by MODEL162.is_mutagen ASC, MODEL162.logp ASC
 @ORDERED_SELECT
 SELECT MODEL178.is_mutagen, count( MODEL178.model_id ) 
 FROM MODEL as MODEL178, ATOM as T1008290410000  
-WHERE MODEL178.model_id=T1008290410000.model_id AND MODEL178.is_mutagen=F 
+WHERE MODEL178.model_id=T1008290410000.model_id AND MODEL178.is_mutagen='F' 
 group by MODEL178.is_mutagen 
 order by MODEL178.is_mutagen ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL178.is_mutagen, count( MODEL178.model_id ) 
 FROM MODEL as MODEL178, BOND as T1008290410330  
-WHERE MODEL178.model_id=T1008290410330.model_id AND MODEL178.is_mutagen=F
+WHERE MODEL178.model_id=T1008290410330.model_id AND MODEL178.is_mutagen='F'
  group by MODEL178.is_mutagen 
  order by MODEL178.is_mutagen ASC
 ;
@@ -256,21 +256,21 @@ WHERE MODEL178.model_id=T1008290410330.model_id AND MODEL178.is_mutagen=F
 @ORDERED_SELECT
 SELECT MODEL178.is_mutagen,MODEL178.is_mutagen, count( MODEL178.model_id ) 
 FROM MODEL as MODEL178  
-WHERE MODEL178.is_mutagen=F 
+WHERE MODEL178.is_mutagen='F' 
 group by MODEL178.is_mutagen
 order by MODEL178.is_mutagen ASC, MODEL178.is_mutagen ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL178.is_mutagen,MODEL178.lumo, count( MODEL178.model_id ) 
 FROM MODEL as MODEL178  
-WHERE MODEL178.is_mutagen=F 
+WHERE MODEL178.is_mutagen='F' 
 group by MODEL178.lumo 
 order by MODEL178.is_mutagen ASC, MODEL178.lumo ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL178.is_mutagen,MODEL178.lumo, count( MODEL178.model_id ) 
 FROM MODEL as MODEL178  
-WHERE MODEL178.is_mutagen=F 
+WHERE MODEL178.is_mutagen='F' 
 group by MODEL178.is_mutagen 
 order by MODEL178.is_mutagen ASC, MODEL178.lumo ASC
 ;
@@ -280,14 +280,14 @@ order by MODEL178.is_mutagen ASC, MODEL178.lumo ASC
 @ORDERED_SELECT
 SELECT MODEL178.is_mutagen,MODEL178.logp, count( MODEL178.model_id ) 
 FROM MODEL as MODEL178  
-WHERE MODEL178.is_mutagen=F 
+WHERE MODEL178.is_mutagen='F' 
 group by MODEL178.logp 
 order by MODEL178.is_mutagen ASC, MODEL178.logp ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL178.is_mutagen,MODEL178.logp, count( MODEL178.model_id ) 
 FROM MODEL as MODEL178  
-WHERE MODEL178.is_mutagen=F 
+WHERE MODEL178.is_mutagen='F' 
 group by  MODEL178.is_mutagen 
 order by MODEL178.is_mutagen ASC, MODEL178.logp ASC
 ;
@@ -309,33 +309,33 @@ order by MODEL1.is_mutagen ASC, MODEL1.lumo ASC
 @ORDERED_SELECT
 SELECT MODEL192.is_mutagen, count(MODEL192.model_id ) 
 FROM MODEL as MODEL192, ATOM as T1008290412030  
-WHERE MODEL192.model_id=T1008290412030.model_id AND MODEL192.lumo=-3 
+WHERE MODEL192.model_id=T1008290412030.model_id AND MODEL192.lumo='-3' 
 group by MODEL192.is_mutagen order by MODEL192.is_mutagen ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL192.is_mutagen, count( MODEL192.model_id ) 
 FROM MODEL as MODEL192, BOND as T1008290412300  
-WHERE MODEL192.model_id=T1008290412300.model_id AND MODEL192.lumo=-3 
+WHERE MODEL192.model_id=T1008290412300.model_id AND MODEL192.lumo='-3' 
 group by MODEL192.is_mutagen order by MODEL192.is_mutagen ASC
 ;
 
 @ORDERED_SELECT
 SELECT MODEL217.is_mutagen,MODEL217.is_mutagen, count( MODEL217.model_id )
 FROM MODEL as MODEL217  
-WHERE MODEL217.lumo=-1 
+WHERE MODEL217.lumo='-1' 
 group by MODEL217.is_mutagen order by MODEL217.is_mutagen ASC, MODEL217.is_mutagen ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL217.is_mutagen,MODEL217.lumo, count( MODEL217.model_id )
 FROM MODEL as MODEL217  
-WHERE MODEL217.lumo=-1 
+WHERE MODEL217.lumo='-1' 
 group by MODEL217.lumo 
 order by MODEL217.is_mutagen ASC, MODEL217.lumo ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL217.is_mutagen,MODEL217.lumo, count( MODEL217.model_id )
 FROM MODEL as MODEL217  
-WHERE MODEL217.lumo=-1 
+WHERE MODEL217.lumo='-1' 
 group by  MODEL217.is_mutagen 
 order by MODEL217.is_mutagen ASC, MODEL217.lumo ASC
 ;
@@ -343,13 +343,13 @@ order by MODEL217.is_mutagen ASC, MODEL217.lumo ASC
 
 @ORDERED_SELECT
 SELECT MODEL217.is_mutagen,MODEL217.logp, count(MODEL217.model_id ) 
-FROM MODEL as MODEL217  WHERE MODEL217.lumo=-1 
+FROM MODEL as MODEL217  WHERE MODEL217.lumo='-1' 
 group by MODEL217.logp 
 order by MODEL217.is_mutagen ASC, MODEL217.logp ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL217.is_mutagen,MODEL217.logp, count(MODEL217.model_id ) 
-FROM MODEL as MODEL217  WHERE MODEL217.lumo=-1 
+FROM MODEL as MODEL217  WHERE MODEL217.lumo='-1' 
 group by  MODEL217.is_mutagen 
 order by MODEL217.is_mutagen ASC, MODEL217.logp ASC
 ;
@@ -357,21 +357,21 @@ order by MODEL217.is_mutagen ASC, MODEL217.logp ASC
 @ORDERED_SELECT
 SELECT MODEL192.is_mutagen,MODEL192.is_mutagen, count( MODEL192.model_id ) 
 FROM MODEL as MODEL192  
-WHERE MODEL192.lumo=-3 
+WHERE MODEL192.lumo='-3' 
 group by MODEL192.is_mutagen 
 order by MODEL192.is_mutagen ASC, MODEL192.is_mutagen ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL192.is_mutagen,MODEL192.lumo, count( MODEL192.model_id ) 
 FROM MODEL as MODEL192 
-WHERE MODEL192.lumo=-3 
+WHERE MODEL192.lumo='-3' 
 group by MODEL192.lumo 
 order by MODEL192.is_mutagen ASC, MODEL192.lumo ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL192.is_mutagen,MODEL192.lumo, count( MODEL192.model_id ) 
 FROM MODEL as MODEL192 
-WHERE MODEL192.lumo=-3 
+WHERE MODEL192.lumo='-3' 
 group by  MODEL192.is_mutagen 
 order by MODEL192.is_mutagen ASC, MODEL192.lumo ASC
 ;
@@ -379,79 +379,79 @@ order by MODEL192.is_mutagen ASC, MODEL192.lumo ASC
 @ORDERED_SELECT
 SELECT MODEL192.is_mutagen,MODEL192.logp, count( MODEL192.model_id ) 
 FROM MODEL as MODEL192  
-WHERE MODEL192.lumo=-3 
+WHERE MODEL192.lumo='-3' 
 group by MODEL192.logp 
 order by MODEL192.is_mutagen ASC, MODEL192.logp ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL192.is_mutagen,MODEL192.logp, count( MODEL192.model_id ) 
 FROM MODEL as MODEL192  
-WHERE MODEL192.lumo=-3 
+WHERE MODEL192.lumo='-3' 
 group by  MODEL192.is_mutagen 
 order by MODEL192.is_mutagen ASC, MODEL192.logp ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL217.is_mutagen, count( MODEL217.model_id ) 
 FROM MODEL as MODEL217, ATOM as T1008290417030  
-WHERE MODEL217.model_id=T1008290417030.model_id AND MODEL217.lumo=-1 
+WHERE MODEL217.model_id=T1008290417030.model_id AND MODEL217.lumo='-1' 
 group by MODEL217.is_mutagen order by MODEL217.is_mutagen ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL217.is_mutagen, count( MODEL217.model_id ) 
 FROM MODEL as MODEL217, BOND as T1008290417690  
-WHERE MODEL217.model_id=T1008290417690.model_id AND MODEL217.lumo=-1 
+WHERE MODEL217.model_id=T1008290417690.model_id AND MODEL217.lumo='-1' 
 group by MODEL217.is_mutagen order by MODEL217.is_mutagen ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL202.is_mutagen, count( MODEL202.model_id ) 
 FROM MODEL as MODEL202, BOND as T1008290413680  
-WHERE MODEL202.model_id=T1008290413680.model_id AND MODEL202.lumo=-2 
+WHERE MODEL202.model_id=T1008290413680.model_id AND MODEL202.lumo='-2' 
 group by MODEL202.is_mutagen order by MODEL202.is_mutagen ASC
 ;
 
 @ORDERED_SELECT
 SELECT MODEL202.is_mutagen, count( MODEL202.model_id ) 
 FROM MODEL as MODEL202, ATOM as T1008290413400  
-WHERE MODEL202.model_id=T1008290413400.model_id AND MODEL202.lumo=-2 
+WHERE MODEL202.model_id=T1008290413400.model_id AND MODEL202.lumo='-2' 
 group by MODEL202.is_mutagen order by MODEL202.is_mutagen ASC
 ;
 
 @ORDERED_SELECT
 SELECT MODEL232.is_mutagen,MODEL232.logp, count( MODEL232.model_id ) 
-FROM MODEL as MODEL232  WHERE MODEL232.logp=8 
+FROM MODEL as MODEL232  WHERE MODEL232.logp='8' 
 group by  MODEL232.is_mutagen 
 order by MODEL232.is_mutagen ASC, MODEL232.logp ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL237.is_mutagen,MODEL237.is_mutagen, count( MODEL237.model_id ) 
 FROM MODEL as MODEL237 
- WHERE MODEL237.logp=7
+ WHERE MODEL237.logp='7'
  group by MODEL237.is_mutagen  order by MODEL237.is_mutagen ASC, MODEL237.is_mutagen ASC
 ;
 
 @ORDERED_SELECT
 SELECT MODEL237.is_mutagen,MODEL237.lumo, count( MODEL237.model_id ) 
 FROM MODEL as MODEL237  
-WHERE MODEL237.logp=7 
+WHERE MODEL237.logp='7' 
 group by MODEL237.lumo 
 order by MODEL237.is_mutagen ASC, MODEL237.lumo ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL237.is_mutagen,MODEL237.lumo, count( MODEL237.model_id ) 
 FROM MODEL as MODEL237  
-WHERE MODEL237.logp=7 
+WHERE MODEL237.logp='7' 
 group by  MODEL237.is_mutagen 
 order by MODEL237.is_mutagen ASC, MODEL237.lumo ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL237.is_mutagen,MODEL237.logp, count( MODEL237.model_id ) 
-FROM MODEL as MODEL237  WHERE MODEL237.logp=7 
+FROM MODEL as MODEL237  WHERE MODEL237.logp='7' 
 group by MODEL237.logp 
 order by MODEL237.is_mutagen ASC, MODEL237.logp ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL237.is_mutagen,MODEL237.logp, count( MODEL237.model_id ) 
-FROM MODEL as MODEL237  WHERE MODEL237.logp=7 
+FROM MODEL as MODEL237  WHERE MODEL237.logp='7' 
 group by  MODEL237.is_mutagen 
 order by MODEL237.is_mutagen ASC, MODEL237.logp ASC
 ;
@@ -474,38 +474,38 @@ order by MODEL1.is_mutagen ASC, MODEL1.logp ASC
 @ORDERED_SELECT
 SELECT MODEL232.is_mutagen, count( MODEL232.model_id ) 
 FROM MODEL as MODEL232, ATOM as T1008290420930  
-WHERE MODEL232.model_id=T1008290420930.model_id AND MODEL232.logp=8 
+WHERE MODEL232.model_id=T1008290420930.model_id AND MODEL232.logp='8' 
 group by MODEL232.is_mutagen order by MODEL232.is_mutagen ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL232.is_mutagen, count( MODEL232.model_id ) 
 FROM MODEL as MODEL232, BOND as T1008290421150 
- WHERE MODEL232.model_id=T1008290421150.model_id AND MODEL232.logp=8 
+ WHERE MODEL232.model_id=T1008290421150.model_id AND MODEL232.logp='8' 
  group by MODEL232.is_mutagen order by MODEL232.is_mutagen ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL232.is_mutagen,MODEL232.is_mutagen, count( MODEL232.model_id ) 
 FROM MODEL as MODEL232  
-WHERE MODEL232.logp=8 
+WHERE MODEL232.logp='8' 
 group by MODEL232.is_mutagen 
 order by MODEL232.is_mutagen ASC, MODEL232.is_mutagen ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL232.is_mutagen,MODEL232.lumo, count( MODEL232.model_id ) 
-FROM MODEL as MODEL232  WHERE MODEL232.logp=8
+FROM MODEL as MODEL232  WHERE MODEL232.logp='8'
  group by MODEL232.lumo 
  order by MODEL232.is_mutagen ASC, MODEL232.lumo ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL232.is_mutagen,MODEL232.lumo, count( MODEL232.model_id ) 
-FROM MODEL as MODEL232  WHERE MODEL232.logp=8
+FROM MODEL as MODEL232  WHERE MODEL232.logp='8'
  group by MODEL232.is_mutagen 
  order by MODEL232.is_mutagen ASC, MODEL232.lumo ASC
 ;
 
 @ORDERED_SELECT
 SELECT MODEL232.is_mutagen,MODEL232.logp, count( MODEL232.model_id ) 
-FROM MODEL as MODEL232  WHERE MODEL232.logp=8 
+FROM MODEL as MODEL232  WHERE MODEL232.logp='8' 
 group by MODEL232.logp 
 order by MODEL232.is_mutagen ASC, MODEL232.logp ASC
 ;
@@ -520,7 +520,7 @@ order by MODEL2.is_mutagen ASC, ATOM3.type ASC
 @ORDERED_SELECT
 SELECT MODEL237.is_mutagen, count( MODEL237.model_id ) 
 FROM MODEL as MODEL237, ATOM as T1008290422250  
-WHERE MODEL237.model_id=T1008290422250.model_id AND MODEL237.logp=7 
+WHERE MODEL237.model_id=T1008290422250.model_id AND MODEL237.logp='7' 
 group by MODEL237.is_mutagen 
 order by MODEL237.is_mutagen ASC
 ;
@@ -528,38 +528,38 @@ order by MODEL237.is_mutagen ASC
 @ORDERED_SELECT
 SELECT MODEL247.is_mutagen, count( MODEL247.model_id ) 
 FROM MODEL as MODEL247, ATOM as T1008290427740  
-WHERE MODEL247.model_id=T1008290427740.model_id AND MODEL247.logp=6 
+WHERE MODEL247.model_id=T1008290427740.model_id AND MODEL247.logp='6' 
 group by MODEL247.is_mutagen order by MODEL247.is_mutagen ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL247.is_mutagen, count( MODEL247.model_id ) 
 FROM MODEL as MODEL247, BOND as T1008290427850 
- WHERE MODEL247.model_id=T1008290427850.model_id AND MODEL247.logp=6 
+ WHERE MODEL247.model_id=T1008290427850.model_id AND MODEL247.logp='6' 
  group by MODEL247.is_mutagen order by MODEL247.is_mutagen ASC
 ;
 
 @ORDERED_SELECT
 SELECT MODEL237.is_mutagen, count( MODEL237.model_id ) 
 FROM MODEL as MODEL237, BOND as T1008290422850  
-WHERE MODEL237.model_id=T1008290422850.model_id AND MODEL237.logp=7
+WHERE MODEL237.model_id=T1008290422850.model_id AND MODEL237.logp='7'
  group by MODEL237.is_mutagen order by MODEL237.is_mutagen ASC
 ;
 
 @ORDERED_SELECT
 SELECT MODEL247.is_mutagen,MODEL247.is_mutagen, count( MODEL247.model_id )
- FROM MODEL as MODEL247  WHERE MODEL247.logp=6 
+ FROM MODEL as MODEL247  WHERE MODEL247.logp='6' 
  group by MODEL247.is_mutagen  order by MODEL247.is_mutagen ASC, MODEL247.is_mutagen ASC
 ;
 
 @ORDERED_SELECT
 SELECT MODEL247.is_mutagen,MODEL247.lumo, count( MODEL247.model_id ) 
-FROM MODEL as MODEL247  WHERE MODEL247.logp=6 
+FROM MODEL as MODEL247  WHERE MODEL247.logp='6' 
 group by MODEL247.lumo 
 order by MODEL247.is_mutagen ASC, MODEL247.lumo ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL247.is_mutagen,MODEL247.lumo, count( MODEL247.model_id ) 
-FROM MODEL as MODEL247  WHERE MODEL247.logp=6 
+FROM MODEL as MODEL247  WHERE MODEL247.logp='6' 
 group by MODEL247.is_mutagen 
 order by MODEL247.is_mutagen ASC, MODEL247.lumo ASC
 ;
@@ -567,14 +567,14 @@ order by MODEL247.is_mutagen ASC, MODEL247.lumo ASC
 
 @ORDERED_SELECT
 SELECT MODEL247.is_mutagen,MODEL247.logp, count( MODEL247.model_id )
- FROM MODEL as  MODEL247  WHERE MODEL247.logp=6 
+ FROM MODEL as  MODEL247  WHERE MODEL247.logp='6' 
  group by MODEL247.logp
  order by MODEL247.is_mutagen ASC, MODEL247.logp ASC
 ;
 
 @ORDERED_SELECT
 SELECT MODEL247.is_mutagen,MODEL247.logp, count( MODEL247.model_id )
- FROM MODEL as  MODEL247  WHERE MODEL247.logp=6 
+ FROM MODEL as  MODEL247  WHERE MODEL247.logp='6' 
  group by  MODEL247.is_mutagen 
  order by MODEL247.is_mutagen ASC, MODEL247.logp ASC
 ;
@@ -582,42 +582,42 @@ SELECT MODEL247.is_mutagen,MODEL247.logp, count( MODEL247.model_id )
 
 @ORDERED_SELECT
 SELECT MODEL255.is_mutagen, count( MODEL255.model_id )
-FROM MODEL as MODEL255, ATOM as T1008290428950  WHERE MODEL255.model_id=T1008290428950.model_id AND MODEL255.logp=5 
+FROM MODEL as MODEL255, ATOM as T1008290428950  WHERE MODEL255.model_id=T1008290428950.model_id AND MODEL255.logp='5' 
 group by MODEL255.is_mutagen order by MODEL255.is_mutagen ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL255.is_mutagen, count( MODEL255.model_id ) 
 FROM MODEL as MODEL255, BOND as T1008290429280  
-WHERE MODEL255.model_id=T1008290429280.model_id AND MODEL255.logp=5 
+WHERE MODEL255.model_id=T1008290429280.model_id AND MODEL255.logp='5' 
 group by MODEL255.is_mutagen order by MODEL255.is_mutagen ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL255.is_mutagen,MODEL255.is_mutagen, count( MODEL255.model_id ) 
-FROM MODEL as MODEL255  WHERE MODEL255.logp=5 
+FROM MODEL as MODEL255  WHERE MODEL255.logp='5' 
 group by MODEL255.is_mutagen order by MODEL255.is_mutagen ASC, MODEL255.is_mutagen ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL255.is_mutagen,MODEL255.lumo, count( MODEL255.model_id )
- FROM MODEL as MODEL255  WHERE MODEL255.logp=5 
+ FROM MODEL as MODEL255  WHERE MODEL255.logp='5' 
  group by MODEL255.lumo 
  order by MODEL255.is_mutagen ASC, MODEL255.lumo ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL255.is_mutagen,MODEL255.lumo, count( MODEL255.model_id )
- FROM MODEL as MODEL255  WHERE MODEL255.logp=5 
+ FROM MODEL as MODEL255  WHERE MODEL255.logp='5' 
  group by  MODEL255.is_mutagen 
  order by MODEL255.is_mutagen ASC, MODEL255.lumo ASC
 ;
 
 @ORDERED_SELECT
 SELECT MODEL255.is_mutagen,MODEL255.logp, count( MODEL255.model_id ) 
-FROM MODEL as MODEL255  WHERE MODEL255.logp=5 
+FROM MODEL as MODEL255  WHERE MODEL255.logp='5' 
 group by MODEL255.logp 
 order by MODEL255.is_mutagen ASC, MODEL255.logp ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL255.is_mutagen,MODEL255.logp, count( MODEL255.model_id ) 
-FROM MODEL as MODEL255  WHERE MODEL255.logp=5 
+FROM MODEL as MODEL255  WHERE MODEL255.logp='5' 
 group by  MODEL255.is_mutagen 
 order by MODEL255.is_mutagen ASC, MODEL255.logp ASC
 ;
@@ -625,40 +625,40 @@ order by MODEL255.is_mutagen ASC, MODEL255.logp ASC
 
 @ORDERED_SELECT
 SELECT MODEL264.is_mutagen, count( MODEL264.model_id ) 
-FROM MODEL as MODEL264, ATOM as T1008290434110  WHERE MODEL264.model_id=T1008290434110.model_id AND MODEL264.logp=4 
+FROM MODEL as MODEL264, ATOM as T1008290434110  WHERE MODEL264.model_id=T1008290434110.model_id AND MODEL264.logp='4' 
 group by MODEL264.is_mutagen order by MODEL264.is_mutagen ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL264.is_mutagen, count( MODEL264.model_id )
- FROM MODEL as MODEL264, BOND as T1008290434330  WHERE MODEL264.model_id=T1008290434330.model_id AND MODEL264.logp=4 
+ FROM MODEL as MODEL264, BOND as T1008290434330  WHERE MODEL264.model_id=T1008290434330.model_id AND MODEL264.logp='4' 
  group by MODEL264.is_mutagen order by MODEL264.is_mutagen ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL264.is_mutagen,MODEL264.is_mutagen, count( MODEL264.model_id ) 
-FROM MODEL as MODEL264  WHERE MODEL264.logp=4 
+FROM MODEL as MODEL264  WHERE MODEL264.logp='4' 
 group by MODEL264.is_mutagen order by MODEL264.is_mutagen ASC, MODEL264.is_mutagen ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL264.is_mutagen,MODEL264.lumo, count( MODEL264.model_id )
- FROM MODEL as MODEL264  WHERE MODEL264.logp=4 
+ FROM MODEL as MODEL264  WHERE MODEL264.logp='4' 
  group by MODEL264.lumo 
  order by MODEL264.is_mutagen ASC, MODEL264.lumo ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL264.is_mutagen,MODEL264.lumo, count( MODEL264.model_id )
- FROM MODEL as MODEL264  WHERE MODEL264.logp=4 
+ FROM MODEL as MODEL264  WHERE MODEL264.logp='4' 
  group by  MODEL264.is_mutagen 
  order by MODEL264.is_mutagen ASC, MODEL264.lumo ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL264.is_mutagen,MODEL264.logp, count( MODEL264.model_id )
- FROM MODEL as MODEL264  WHERE MODEL264.logp=4 
+ FROM MODEL as MODEL264  WHERE MODEL264.logp='4' 
  group by MODEL264.logp 
  order by MODEL264.is_mutagen ASC, MODEL264.logp ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL264.is_mutagen,MODEL264.logp, count( MODEL264.model_id )
- FROM MODEL as MODEL264  WHERE MODEL264.logp=4 
+ FROM MODEL as MODEL264  WHERE MODEL264.logp='4' 
  group by MODEL264.is_mutagen 
  order by MODEL264.is_mutagen ASC, MODEL264.logp ASC
 ;
@@ -666,136 +666,136 @@ SELECT MODEL264.is_mutagen,MODEL264.logp, count( MODEL264.model_id )
 
 @ORDERED_SELECT
 SELECT MODEL275.is_mutagen, count( MODEL275.model_id ) 
-FROM MODEL as MODEL275, ATOM as T1008290435540  WHERE MODEL275.model_id=T1008290435540.model_id AND MODEL275.logp=3 
+FROM MODEL as MODEL275, ATOM as T1008290435540  WHERE MODEL275.model_id=T1008290435540.model_id AND MODEL275.logp='3' 
 group by MODEL275.is_mutagen order by MODEL275.is_mutagen ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL275.is_mutagen, count( MODEL275.model_id ) 
-FROM MODEL as MODEL275, BOND as T1008290436030  WHERE MODEL275.model_id=T1008290436030.model_id AND MODEL275.logp=3 
+FROM MODEL as MODEL275, BOND as T1008290436030  WHERE MODEL275.model_id=T1008290436030.model_id AND MODEL275.logp='3' 
 group by MODEL275.is_mutagen order by MODEL275.is_mutagen ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL275.is_mutagen,MODEL275.is_mutagen, count( MODEL275.model_id ) 
-FROM MODEL as MODEL275  WHERE MODEL275.logp=3 
+FROM MODEL as MODEL275  WHERE MODEL275.logp='3' 
 group by MODEL275.is_mutagen order by MODEL275.is_mutagen ASC, MODEL275.is_mutagen ASC
 ;
 
 @ORDERED_SELECT
 SELECT MODEL297.is_mutagen,MODEL297.lumo, count( MODEL297.model_id ) 
-FROM MODEL as MODEL297  WHERE MODEL297.logp=1 
+FROM MODEL as MODEL297  WHERE MODEL297.logp='1' 
 group by MODEL297.lumo 
 order by MODEL297.is_mutagen ASC, MODEL297.lumo ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL297.is_mutagen,MODEL297.lumo, count( MODEL297.model_id ) 
-FROM MODEL as MODEL297  WHERE MODEL297.logp=1 
+FROM MODEL as MODEL297  WHERE MODEL297.logp='1' 
 group by  MODEL297.is_mutagen 
 order by MODEL297.is_mutagen ASC, MODEL297.lumo ASC
 ;
 
 @ORDERED_SELECT
 SELECT MODEL297.is_mutagen,MODEL297.logp, count( MODEL297.model_id )
- FROM MODEL as MODEL297  WHERE MODEL297.logp=1 
+ FROM MODEL as MODEL297  WHERE MODEL297.logp='1' 
  group by MODEL297.logp 
  order by MODEL297.is_mutagen ASC, MODEL297.logp ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL297.is_mutagen,MODEL297.logp, count( MODEL297.model_id )
- FROM MODEL as MODEL297  WHERE MODEL297.logp=1 
+ FROM MODEL as MODEL297  WHERE MODEL297.logp='1' 
  group by  MODEL297.is_mutagen 
  order by MODEL297.is_mutagen ASC, MODEL297.logp ASC
  ;
  @ORDERED_SELECT
 SELECT MODEL306.is_mutagen, count( MODEL306.model_id )
-FROM MODEL as MODEL306, ATOM as T1008290441690  WHERE MODEL306.model_id=T1008290441690.model_id AND MODEL306.logp=0
+FROM MODEL as MODEL306, ATOM as T1008290441690  WHERE MODEL306.model_id=T1008290441690.model_id AND MODEL306.logp='0'
  group by MODEL306.is_mutagen order by MODEL306.is_mutagen ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL306.is_mutagen, count( MODEL306.model_id ) 
-FROM MODEL as MODEL306, BOND as T1008290441960  WHERE MODEL306.model_id=T1008290441960.model_id AND MODEL306.logp=0 
+FROM MODEL as MODEL306, BOND as T1008290441960  WHERE MODEL306.model_id=T1008290441960.model_id AND MODEL306.logp='0' 
 group by MODEL306.is_mutagen order by MODEL306.is_mutagen ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL306.is_mutagen,MODEL306.is_mutagen, count( MODEL306.model_id ) 
-FROM MODEL as MODEL306  WHERE MODEL306.logp=0 
+FROM MODEL as MODEL306  WHERE MODEL306.logp='0' 
 group by MODEL306.is_mutagen 
 order by MODEL306.is_mutagen ASC, MODEL306.is_mutagen ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL306.is_mutagen,MODEL306.lumo, count( MODEL306.model_id ) 
-FROM MODEL as MODEL306  WHERE MODEL306.logp=0 
+FROM MODEL as MODEL306  WHERE MODEL306.logp='0' 
 group by MODEL306.lumo 
 order by MODEL306.is_mutagen ASC, MODEL306.lumo ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL306.is_mutagen,MODEL306.lumo, count( MODEL306.model_id ) 
-FROM MODEL as MODEL306  WHERE MODEL306.logp=0 
+FROM MODEL as MODEL306  WHERE MODEL306.logp='0' 
 group by  MODEL306.is_mutagen 
 order by MODEL306.is_mutagen ASC, MODEL306.lumo ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL306.is_mutagen,MODEL306.logp, count( MODEL306.model_id ) 
-FROM MODEL as MODEL306  WHERE MODEL306.logp=0 
+FROM MODEL as MODEL306  WHERE MODEL306.logp='0' 
 group by MODEL306.logp 
 order by MODEL306.is_mutagen ASC, MODEL306.logp ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL306.is_mutagen,MODEL306.logp, count( MODEL306.model_id ) 
-FROM MODEL as MODEL306  WHERE MODEL306.logp=0 
+FROM MODEL as MODEL306  WHERE MODEL306.logp='0' 
 group by  MODEL306.is_mutagen 
 order by MODEL306.is_mutagen ASC, MODEL306.logp ASC
 ;
 
 @ORDERED_SELECT
 SELECT MODEL275.is_mutagen,MODEL275.lumo, count( MODEL275.model_id )
- FROM MODEL as MODEL275  WHERE MODEL275.logp=3 
+ FROM MODEL as MODEL275  WHERE MODEL275.logp='3' 
  group by MODEL275.lumo 
  order by MODEL275.is_mutagen ASC, MODEL275.lumo ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL275.is_mutagen,MODEL275.lumo, count( MODEL275.model_id )
- FROM MODEL as MODEL275  WHERE MODEL275.logp=3 
+ FROM MODEL as MODEL275  WHERE MODEL275.logp='3' 
  group by  MODEL275.is_mutagen 
  order by MODEL275.is_mutagen ASC, MODEL275.lumo ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL275.is_mutagen,MODEL275.logp, count( MODEL275.model_id ) 
-FROM MODEL as MODEL275  WHERE MODEL275.logp=3 
+FROM MODEL as MODEL275  WHERE MODEL275.logp='3' 
 group by MODEL275.logp  order by MODEL275.is_mutagen ASC, MODEL275.logp ASC
 ;
 
 @ORDERED_SELECT
 SELECT MODEL286.is_mutagen, count( MODEL286.model_id ) 
-FROM MODEL as MODEL286, BOND as T1008290438010  WHERE MODEL286.model_id=T1008290438010.model_id AND MODEL286.logp=2 
+FROM MODEL as MODEL286, BOND as T1008290438010  WHERE MODEL286.model_id=T1008290438010.model_id AND MODEL286.logp='2' 
 group by MODEL286.is_mutagen order by MODEL286.is_mutagen ASC
 ;
 
 @ORDERED_SELECT
 SELECT MODEL286.is_mutagen,MODEL286.is_mutagen, count( MODEL286.model_id ) 
-FROM MODEL as MODEL286  WHERE MODEL286.logp=2 
+FROM MODEL as MODEL286  WHERE MODEL286.logp='2' 
 group by MODEL286.is_mutagen order by MODEL286.is_mutagen ASC, MODEL286.is_mutagen ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL286.is_mutagen,MODEL286.lumo, count( MODEL286.model_id )
- FROM MODEL as MODEL286  WHERE MODEL286.logp=2 
+ FROM MODEL as MODEL286  WHERE MODEL286.logp='2' 
  group by MODEL286.lumo 
  order by MODEL286.is_mutagen ASC, MODEL286.lumo ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL286.is_mutagen,MODEL286.lumo, count( MODEL286.model_id )
- FROM MODEL as MODEL286  WHERE MODEL286.logp=2 
+ FROM MODEL as MODEL286  WHERE MODEL286.logp='2' 
  group by  MODEL286.is_mutagen 
  order by MODEL286.is_mutagen ASC, MODEL286.lumo ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL286.is_mutagen,MODEL286.logp, count( MODEL286.model_id ) 
-FROM MODEL as MODEL286  WHERE MODEL286.logp=2 
+FROM MODEL as MODEL286  WHERE MODEL286.logp='2' 
 group by MODEL286.logp 
 order by MODEL286.is_mutagen ASC, MODEL286.logp ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL286.is_mutagen,MODEL286.logp, count( MODEL286.model_id ) 
-FROM MODEL as MODEL286  WHERE MODEL286.logp=2 
+FROM MODEL as MODEL286  WHERE MODEL286.logp='2' 
 group by  MODEL286.is_mutagen 
 order by MODEL286.is_mutagen ASC, MODEL286.logp ASC
 ;
@@ -831,19 +831,19 @@ order by MODEL2.is_mutagen ASC, MODEL2.logp ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL297.is_mutagen, count( MODEL297.model_id ) 
-FROM MODEL as MODEL297, BOND as T1008290440700  WHERE MODEL297.model_id=T1008290440700.model_id AND MODEL297.logp=1 
+FROM MODEL as MODEL297, BOND as T1008290440700  WHERE MODEL297.model_id=T1008290440700.model_id AND MODEL297.logp='1' 
 group by MODEL297.is_mutagen 
 order by is_mutagen ,MODEL297.is_mutagen ASC
 ;
 @ORDERED_SELECT
 SELECT MODEL297.is_mutagen, count( MODEL297.model_id ) 
-FROM MODEL as MODEL297, ATOM as T1008290440150  WHERE MODEL297.model_id=T1008290440150.model_id AND MODEL297.logp=1 
+FROM MODEL as MODEL297, ATOM as T1008290440150  WHERE MODEL297.model_id=T1008290440150.model_id AND MODEL297.logp='1' 
 group by MODEL297.is_mutagen order by is_mutagen , MODEL297.is_mutagen ASC
 ;
 
 @ORDERED_SELECT
 SELECT MODEL297.is_mutagen,MODEL297.is_mutagen, count( MODEL297.model_id ) 
-FROM MODEL as MODEL297  WHERE MODEL297.logp=1 
+FROM MODEL as MODEL297  WHERE MODEL297.logp='1' 
 group by MODEL297.is_mutagen order by MODEL297.is_mutagen ASC, MODEL297.is_mutagen ASC
 ;
 @ORDERED_SELECT
@@ -856,7 +856,7 @@ order by  ATOM3.type ASC
 
 @ORDERED_SELECT
 SELECT MODEL286.is_mutagen, count( MODEL286.model_id ) 
-FROM MODEL as MODEL286, ATOM as T1008290437790  WHERE MODEL286.model_id=T1008290437790.model_id AND MODEL286.logp=2 
+FROM MODEL as MODEL286, ATOM as T1008290437790  WHERE MODEL286.model_id=T1008290437790.model_id AND MODEL286.logp='2' 
 group by MODEL286.is_mutagen 
 order by MODEL286.is_mutagen ASC
 ;
