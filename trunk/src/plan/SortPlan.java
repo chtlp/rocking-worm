@@ -1,5 +1,6 @@
 package plan;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -50,7 +51,7 @@ public class SortPlan extends QueryPlan {
 			if (r != null) {
 				++k;
 				blockSort.add(r);
-//				Debug.testLight3.debug("sort plan input: {}", r);
+				// Debug.testLight3.debug("sort plan input: {}", r);
 			}
 
 			if (k == blockNum || r == null) {
@@ -62,13 +63,13 @@ public class SortPlan extends QueryPlan {
 				k = 0;
 				blockSort.clear();
 			}
-			
+
 			if (r == null)
 				break;
 		}
 		iterator.close();
-		
-		for(RecordList l : results) {
+
+		for (RecordList l : results) {
 			l.open();
 		}
 
@@ -77,24 +78,41 @@ public class SortPlan extends QueryPlan {
 	public Record next() {
 		Record r = null;
 		RecordList list = null;
-		for(RecordList l : results) {
+		for (RecordList l : results) {
 			Record x = l.peek();
 			if (x != null && (r == null || comp.compare(x, r) < 0)) {
 				r = x;
 				list = l;
 			}
 		}
-		
-		if (r != null) list.removeFront();
-		
+
+		if (r != null)
+			list.removeFront();
+
 		return r;
 	}
 
 	public void close() {
-		for(RecordList l : results) {
+		for (RecordList l : results) {
 			l.free();
 		}
-		
+//		print(System.out);
+
+	}
+
+	public void print(PrintStream out) {
+		out.println(" *** sort plan *** ");
+		try {
+			for (open();;) {
+				Record r = next();
+				if (r != null)
+					out.format("%s \n", r);
+				else break;
+			}
+//			close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }
