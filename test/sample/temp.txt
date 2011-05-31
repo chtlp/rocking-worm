@@ -1,6 +1,9 @@
 use nano
 ;
 
+select sum(numGuns) from Classes,Ships where Classes.class=Ships.class group by country
+;
+
 select country from Classes ,Ships
 where Classes.class=Ships.class
 group by country
