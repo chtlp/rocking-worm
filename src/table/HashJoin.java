@@ -54,6 +54,8 @@ public class HashJoin {
 
 	public void open() throws DeadlockException, TimeoutException {
 		Debug.testJoin.debug("Hash Join opens");
+		iter = 0;
+		started = false;
 		blocks = numBlocks();
 		list1 = new RecordList[blocks];
 		list2 = new RecordList[blocks];
@@ -239,7 +241,11 @@ public class HashJoin {
 	}
 
 	public void close() {
-		// nothing to do here, I have freed all the resources in the process
+		try {
+		print(System.out);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void print(PrintStream out) throws DeadlockException,
