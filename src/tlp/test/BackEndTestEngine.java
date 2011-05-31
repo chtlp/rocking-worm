@@ -49,15 +49,14 @@ public class BackEndTestEngine {
 		// "./test/ARNO2/insert_ATOM.txt", "./test/ARNO2/insert_BOND.txt",
 		// "./test/ARNO2/insert_MODEL.txt"};
 
-		/*
-		 * String[] files = new String[] { "./test/sample/sample-create.txt",
-		 * "./test/sample/sample-select.txt", "./test/sample/sample-index.txt",
-		 * "./test/sample/sample-concurrency.txt", };
-		 */
-		String[] files = new String[] { "./test/test3/test3-create.txt",
-				"./test/test3/test3-insert.txt",
-				"./test/test3/test3-success.txt" };
-		
+		String[] files = new String[] { "./test/sample/sample-create.txt",
+				"./test/sample/sample-select.txt",
+				"./test/sample/sample-index.txt",
+				"./test/sample/sample-concurrency.txt", };
+		//		String[] files = new String[] { "./test/test3/test3-create.txt",
+		//				"./test/test3/test3-insert.txt",
+		//				"./test/test3/test3-success.txt" };
+
 		int testcase = 0;
 
 		for (String fileName : files) {
@@ -74,7 +73,7 @@ public class BackEndTestEngine {
 					QueryPlan qPlan = (QueryPlan) plan;
 					qPlan.open();
 					table.Record record = null;
-					System.out.println("Test Case # " + testcase ++);
+					System.out.println("Test Case # " + testcase++);
 					do {
 						record = qPlan.next();
 						if (record != null)
@@ -82,7 +81,8 @@ public class BackEndTestEngine {
 					} while (record != null);
 					qPlan.close();
 
-				} else {
+				}
+				else {
 					((UpdatePlan) plan).run();
 				}
 				result = result.tail;
