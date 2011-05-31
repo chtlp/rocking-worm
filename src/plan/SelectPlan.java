@@ -82,7 +82,7 @@ public class SelectPlan extends QueryPlan {
 	@Override
 	public void open() throws DeadlockException, TimeoutException {
 		counter = 0;
-		// System.out.println("selectplan opens");
+//		 System.out.println("selectplan opens");
 		queryPlan.open();
 		for (FuncCal funcCal : funcMap.values())
 			funcCal.setZero();
@@ -137,6 +137,7 @@ public class SelectPlan extends QueryPlan {
 			Record ret = getValues(null);
 			flag = false;
 			if (ret != null) ++counter;
+			Debug.testSimple.debug("select res {}", ret);
 			return ret;
 		}
 
@@ -155,6 +156,7 @@ public class SelectPlan extends QueryPlan {
 		if (distinct)
 			add2Bucket(ret);
 		if (ret != null) ++counter;
+		Debug.testSimple.debug("select res {}", ret);
 		return ret;
 	}
 

@@ -348,7 +348,7 @@ public class BPlusIndex extends Index implements TableIterator {
 			n.drop(tr);
 		}
 
-		BufferManager.free(tr, treeRoot);
+		BufferManager.free(tr, metaPageID);
 	}
 
 	@Override

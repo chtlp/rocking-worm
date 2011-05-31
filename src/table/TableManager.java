@@ -45,6 +45,7 @@ public class TableManager {
 				Debug.testNullLogger.debug("word-index: insert {}", r);
 				i.add(tr, r.getValue(columnID), r.rowID);
 			}
+			scan.close();
 		}
 		return i;
 

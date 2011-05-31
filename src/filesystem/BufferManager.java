@@ -4,6 +4,7 @@ import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.TreeSet;
 
+import tlp.test.BackEndTestEngine;
 import tlp.util.Debug;
 import transaction.Transaction;
 
@@ -90,12 +91,14 @@ public class BufferManager {
 		return p;
 	}
 
+	static int cc = 0;
 	public static synchronized Page getPage(Transaction tr, int pageID) {
 		Page p = buffer.get(pageID);
 		if (p != null) {
 			assert p.valid;
 			p.pinned.getAndIncrement();
 			p.pinners.add(tr);
+			
 			return p;
 		}
 		if (buffer.size() >= MAX_BUFFERED_PAGES) {
@@ -224,7 +227,7 @@ public class BufferManager {
 		Debug.bufferLogger.debug("free page {}", pageID);
 		Page p = buffer.get(pageID);
 		p.setType(tr, Page.TYPE_EMPTY);
-		p.release(tr);
+//		p.release(tr);
 		assert p.valid;
 		p.valid = false;
 

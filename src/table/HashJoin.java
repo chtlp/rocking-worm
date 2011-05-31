@@ -88,12 +88,16 @@ public class HashJoin {
 			}
 		}
 		p2.close();
-		
-		for(int i=0; i<blocks; ++i) {
-			Debug.testJoin.debug("list1[{}] size = {}", i, list1[i].size());
-			Debug.testJoin.debug("list2[{}] size = {}", i, list2[i].size());
+
+		if (Debug.testJoin.isDebugEnabled()) {
+			for (int i = 0; i < blocks; ++i) {
+				Debug.testJoin.debug("list1[{}] size = {}", i, list1[i].size());
+				list1[i].print(System.out);
+				Debug.testJoin.debug("list2[{}] size = {}", i, list2[i].size());
+				list2[i].print(System.out);
+			}
 		}
-		
+
 	}
 
 	public boolean hasNext() {
@@ -114,8 +118,8 @@ public class HashJoin {
 		while (true) {
 			// start a new block
 			if (started == false) {
-				while (iter < blocks && ((list1[iter].size() == 0)
-						|| (list2[iter].size() == 0))) {
+				while (iter < blocks
+						&& ((list1[iter].size() == 0) || (list2[iter].size() == 0))) {
 					list1[iter].free();
 					list2[iter].free();
 					++iter;
@@ -172,14 +176,16 @@ public class HashJoin {
 					// the current block exhausted, start a new one
 					if (lrec == null) {
 						lhs.free();
-						if (rhsMap == null) rhs.free();
+						if (rhsMap == null)
+							rhs.free();
 						started = false;
 						++iter;
 						break;
 					}
 
 					assert lrec != null;
-					
+					Debug.breakOn(lrec.rowID == 19);
+
 					// else start rhs
 					if (rhsMap != null) {
 						List<Record> mates = rhsMap.get(lrec.getValue(d1));
