@@ -121,16 +121,15 @@ public class FileManager {
 			FileChannel fc = getFile(filename);
 			return (int) (fc.size() / BLOCK_SIZE);
 		} catch (IOException e) {
+			e.printStackTrace();
 			throw new RuntimeException("cannot access " + filename);
 		}
 	}
 	
-	public synchronized boolean delete(String filename) {
+	public synchronized void delete(String filename) {
 		try {
 			FileChannel fc = getFile(filename);
-			fc.close();
-			openFiles.remove(filename);
-			return new File(dbDirectory, filename).delete();
+			fc.truncate(0);
 		} catch (IOException e) {
 			throw new RuntimeException("cannot access " + filename);
 		}
