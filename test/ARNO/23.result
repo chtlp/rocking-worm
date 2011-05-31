@@ -1,6 +1,0 @@
-#SELECT MODEL162.is_mutagen,MODEL162.lumo, count(distinct MODEL162.model_id ) FROM MODEL MODEL162  WHERE MODEL162.is_mutagen='T' group by MODEL162.lumo , MODEL162.is_mutagen order by MODEL162.is_mutagen ASC, MODEL162.lumo ASC
-T -4 1
-T -3 14
-T -2 81
-T -1 29
-;

@@ -1,4 +1,6 @@
 @NEW_THREAD
+drop database arno
+;
 create database arno
 ;
 use arno
