@@ -1,8 +1,10 @@
 use nano
 ;
 
-select class from Classes
-	where (select count(class) from Ships,Outcomes
-		where Ships.class=Classes.class and Ships.name=Outcomes.ship and Outcomes.result='sunk')>0
-	order by class
+select country from Classes ,Ships
+where Classes.class=Ships.class
+group by country
+having sum(numGuns)>=
+all(select sum(numGuns) from Classes,Ships where Classes.class=Ships.class group by country)
+order by country
 ;
