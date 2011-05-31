@@ -60,7 +60,6 @@ public class BPlusLeaf extends BPlusNode {
 	static int cc = 0;
 	@Override
 	public InsertionInfo insert(Transaction tr, Value key, int rid, Value value) {
-		Debug.breakOn(++cc == 50);
 		KeyValuePair pair = null;
 		int ptr = -1;
 		for (beforeFirst(tr); hasNext();) {
@@ -81,9 +80,6 @@ public class BPlusLeaf extends BPlusNode {
 			if (page.readByte(TOTAL_HEADER_LEN + i * index.leafEntrySize) == 0) {
 				loc = i;
 				break;
-			}
-			if (Debug.testSimple.isDebugEnabled() && cc == 50) {
-				Debug.testSimple.debug("valid_bit {}", page.readByte(TOTAL_HEADER_LEN + i * index.leafEntrySize));
 			}
 			assert page.readByte(TOTAL_HEADER_LEN + i * index.leafEntrySize) == 1;
 		}
