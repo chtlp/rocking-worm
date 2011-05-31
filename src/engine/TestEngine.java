@@ -70,12 +70,12 @@ public class TestEngine {
 					} while (record != null);
 					qPlan.close();
 
-					
-					  qPlan.open(); record = null; do { record = qPlan.next();
-					  if (record != null) System.out.println("again " +
-					  record.shortString()); } while (record != null);
-					  qPlan.close();
-					 
+					/*
+					 * qPlan.open(); record = null; do { record = qPlan.next();
+					 * if (record != null) System.out.println("again " +
+					 * record.shortString()); } while (record != null);
+					 * qPlan.close();
+					 */
 				} else {
 					((UpdatePlan) plan).run();
 				}
