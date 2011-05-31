@@ -241,21 +241,20 @@ public class HashJoin {
 	}
 
 	public void close() {
-		try {
-		print(System.out);
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
+//		print(System.out);
 	}
 
-	public void print(PrintStream out) throws DeadlockException,
-			TimeoutException {
+	public void print(PrintStream out) {
 		out.println(" *** Hash Join *** ");
-		for (open();;) {
-			Record r = next();
-			if (r == null)
-				break;
-			out.println(r);
+		try {
+			for (open();;) {
+				Record r = next();
+				if (r == null)
+					break;
+				out.println(r);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 }
