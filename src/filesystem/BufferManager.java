@@ -4,8 +4,6 @@ import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.TreeSet;
 
-import logging.LogManager;
-
 import tlp.util.Debug;
 import transaction.Transaction;
 
@@ -50,23 +48,42 @@ public class BufferManager {
 	public static synchronized Page allocatePage(Transaction tr) {
 		int id = FreeList.allocate(tr);
 
-		Page p = new Page(id);
-		p.setData(new byte[Page.PAGE_SIZE]);
-		p.pinned.set(1);
-		p.pinners.add(tr);
-		assert p.pinners.size() == p.pinned.get();
-		p.refBit.set(true);
+		Page p = null;
+		// this page is already freed but not written to disk yet
+		if (buffer.containsKey(id)) {
+			Debug.bufferLogger.debug("Reuse Page {}", id);
+			p = buffer.get(id);
+			assert p.valid == false && p.getType() == Page.TYPE_EMPTY
+					&& p.getPageID() == id;
+			// loadPage(tr, p);
 
-		Debug.fsLogger.debug("allocate page {}, buffer size = {}", id,
-				buffer.size());
+			assert p.pinned.get() == 0 && p.pinners.size() == 0;
 
-		assert buffer.get(id) == null : id;
-		if (buffer.size() >= MAX_BUFFERED_PAGES) {
-			replacePage();
+			p.valid = true;
+			p.pinned.set(1);
+			p.pinners.add(tr);
+			p.refBit.set(true);
+		} else {
+			p = new Page(id);
+			loadPage(tr, p);
+			p.setType(tr, Page.TYPE_EMPTY);
+			p.pinned.set(1);
+			p.pinners.add(tr);
+			p.valid = true;
+			assert p.pinners.size() == p.pinned.get();
+			p.refBit.set(true);
+
+			Debug.fsLogger.debug("allocate page {}, buffer size = {}", id,
+					buffer.size());
+
+			assert buffer.get(id) == null : id;
+			if (buffer.size() >= MAX_BUFFERED_PAGES) {
+				replacePage();
+			}
+
+			buffer.put(id, p);
+			addToBufferLinkedList(p);
 		}
-
-		buffer.put(id, p);
-		addToBufferLinkedList(p);
 
 		if (Debug.testLight2.isDebugEnabled())
 			checkBufferStatus();
@@ -76,6 +93,7 @@ public class BufferManager {
 	public static synchronized Page getPage(Transaction tr, int pageID) {
 		Page p = buffer.get(pageID);
 		if (p != null) {
+			assert p.valid;
 			p.pinned.getAndIncrement();
 			p.pinners.add(tr);
 			return p;
@@ -136,10 +154,10 @@ public class BufferManager {
 			Page p = (Page) head.next;
 			// this loop is guaranteed to end, since there are
 			// max_buffered_pages
-			while (head.valid == false) {
-				head = (Page) head.next;
-				tail.next = head;
-			}
+			// while (head.valid == false) {
+			// head = (Page) head.next;
+			// tail.next = head;
+			// }
 			Debug.fsLogger.debug("clock cycle at page {}", p.getPageID());
 			if (p.pinned.get() == 0 && p.refBit.get() == false) {
 				if (head.next != head) {
@@ -152,6 +170,7 @@ public class BufferManager {
 				p.dispose();
 				buffer.remove(p.getPageID());
 				replaced = true;
+				Debug.bufferLogger.debug("{} replaced", p.getPageID());
 				Debug.fsLogger.debug("{} replaced", p.getPageID());
 				break;
 			}
@@ -180,22 +199,19 @@ public class BufferManager {
 		TreeSet<Integer> set = new TreeSet<Integer>();
 		Page iter = head;
 		do {
-			if (iter.valid) {
-				assert !set.contains(iter.getPageID());
-				set.add(iter.getPageID());
-			}
+			assert !set.contains(iter.getPageID());
+			set.add(iter.getPageID());
 			iter = (Page) iter.next;
-			
-			if (Debug.testLight2.isDebugEnabled() && iter.valid) {
-				assert buffer.values().contains(iter);
-			}
-		} while(iter != head);
-		
-		Debug.testLight2.debug("cycle length: {}, buffer size: {}",
-				set.size(), buffer.size());
+
+			assert buffer.values().contains(iter);
+		} while (iter != head);
+
+		Debug.testLight2.debug("cycle length: {}, buffer size: {}", set.size(),
+				buffer.size());
 		if (set.size() != buffer.size()) {
 			Debug.testLight2.debug("cycle: {}", set);
-			Debug.testLight2.debug("buffer: {}", new TreeSet<Integer>(buffer.keySet()));
+			Debug.testLight2.debug("buffer: {}",
+					new TreeSet<Integer>(buffer.keySet()));
 		} else {
 			Debug.testLight2.debug("cycle: {}", set);
 		}
@@ -211,30 +227,35 @@ public class BufferManager {
 		p.release(tr);
 		assert p.valid;
 		p.valid = false;
-		buffer.remove(pageID);
+
+		p.pinned.set(0);
+		p.pinners.clear();
+		p.refBit.set(false); // this page to be replaced
+		// buffer.remove(pageID);
 
 		FreeList.free(tr, pageID);
-		
-		checkBufferStatus();
+
+		if (Debug.bufferLogger.isDebugEnabled())
+			checkBufferStatus();
 	}
 
 	// called by the log manager to flush all the dirty pages
 	public static void flushAll() {
 		Debug.bufferLogger.debug("flush all buffers");
-		for(Page p : buffer.values()) {
+		for (Page p : buffer.values()) {
 			p.writeBack();
 		}
-//		LogManager.flushAll();
+		// LogManager.flushAll();
 	}
-	
+
 	public static void cleanUp(Transaction tr) {
-		for(Page p : buffer.values()) {
-			while(p.pinners.remove(tr)) {
+		for (Page p : buffer.values()) {
+			while (p.pinners.remove(tr)) {
 				p.pinned.getAndDecrement();
 			}
 			assert p.pinners.size() == p.pinned.get();
 		}
-		
+
 	}
 
 }
