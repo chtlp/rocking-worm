@@ -25,8 +25,8 @@ public class BackEndTestEngine {
 
 	public static int testcase = 0;
 
-	@Test
-	public void runTest() throws Exception {
+	
+	public static void main(String[] args) throws Exception {
 		// String fileName = "create.txt";
 		// if (args.length > 0) {
 		// fileName = args[0];

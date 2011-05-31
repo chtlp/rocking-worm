@@ -3,4 +3,19 @@
 2. class name of jdbc driver
 	jdbc.FatwormDriver
 3. 配置文件
+    - rockingworm.config是全局的配置文件
+	    DataFile - 数据库文件
+		LoggingFile - Log文件
+		TimedOut - 拿锁时time out，抛出异常的时间间隔(ms)
+		Logging - 是否打开Logging
+		CheckpointOption - 是否做checkpoint(目前checkpoint还有问题)
+    - logback.xml是Java的Logging Library Logback的配置文件，控制debug的输出，不建议改动。
+
+4. 感想
+    - 多人project的debug好难，责任有时都分不清
+    - 写程序的时候做Logging很有助于debug和diagnosis
+    - 配置文件是个好东西，可以不重新编译而改变程序的行为
+
+5. 对advance的建议
+    - 早点给出样例数据	
 	
