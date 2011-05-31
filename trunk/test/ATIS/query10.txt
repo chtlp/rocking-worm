@@ -1,1 +1,0 @@
-select distinct aircraft_code from flight order by aircraft_code ASC;

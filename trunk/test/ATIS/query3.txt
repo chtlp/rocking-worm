@@ -1,1 +1,0 @@
-select month_name.month_name,day_name.day_name from month_name,day_name where month_name.month_number=day_name.day_code order by month_name.month_name ASC;

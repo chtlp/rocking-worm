@@ -1,1 +1,0 @@
-select city.city_name,state.state_name,city.city_code from city,state where city.city_code='MATL' and city.state_code=state.state_code;

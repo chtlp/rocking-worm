@@ -1,4 +1,0 @@
-#SELECT MODEL275.is_mutagen,MODEL275.is_mutagen, count(distinct MODEL275.model_id ) FROM MODEL MODEL275  WHERE MODEL275.logp='3' group by MODEL275.is_mutagen , MODEL275.is_mutagen order by MODEL275.is_mutagen ASC, MODEL275.is_mutagen ASC
-F F 20
-T T 31
-;

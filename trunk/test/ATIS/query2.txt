@@ -1,1 +1,0 @@
-select city.city_name,state.state_name,city.city_code from state,city where city.state_code=state.state_code order by city.city_name ASC;

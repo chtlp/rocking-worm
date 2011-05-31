@@ -1,1 +1,0 @@
-select distinct flight_code from flight_fare order by flight_code ASC;
