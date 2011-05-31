@@ -1,11 +1,9 @@
-drop database arno
-;
 create database arno
 ;
 use arno
 ;
 CREATE TABLE MODEL (
-   MODEL_ID int NOT NULL DEFAULT 0,
+   MODEL_ID int NOT NULL DEFAULT '0',
    IS_MUTAGEN char(3),
    LUMO int,
    LOGP int,
@@ -24,7 +22,7 @@ CREATE TABLE ATOM (
 ;
 
 CREATE TABLE BOND (
-   BOND_ID int NOT NULL DEFAULT 0,
+   BOND_ID int NOT NULL DEFAULT '0',
    MODEL_ID int,
    ATOM1 varchar(10),
    ATOM2 varchar(10),

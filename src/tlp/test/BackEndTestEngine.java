@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 
 import logging.Recovery;
 
+import org.junit.Test;
+
 import parser.Absyn;
 import parser.AbsynList;
 import parser.lexer;
@@ -17,12 +19,12 @@ import table.TableManager;
 import transaction.Transaction;
 import util.Config;
 import util.Constant;
-import filesystem.BufferManager;
 import filesystem.FileStorage;
 
 public class BackEndTestEngine {
 
-	public static void main(String[] args) throws Exception {
+	@Test
+	public void runTest() throws Exception {
 		// String fileName = "create.txt";
 		// if (args.length > 0) {
 		// fileName = args[0];
@@ -55,6 +57,8 @@ public class BackEndTestEngine {
 		String[] files = new String[] { "./test/test3/test3-create.txt",
 				"./test/test3/test3-insert.txt",
 				"./test/test3/test3-success.txt" };
+		
+		int testcase = 0;
 
 		for (String fileName : files) {
 			parser p = new parser(new lexer(new FileInputStream(fileName)));
@@ -70,6 +74,7 @@ public class BackEndTestEngine {
 					QueryPlan qPlan = (QueryPlan) plan;
 					qPlan.open();
 					table.Record record = null;
+					System.out.println("Test Case # " + testcase ++);
 					do {
 						record = qPlan.next();
 						if (record != null)
