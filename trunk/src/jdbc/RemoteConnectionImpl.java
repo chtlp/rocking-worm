@@ -60,7 +60,9 @@ class RemoteConnectionImpl extends UnicastRemoteObject implements
 	@Override
 	public void commit() throws RemoteException {
 		tx.commit();
+		String oldDBName = tx.getDBName();
 		tx = Transaction.begin();
+		tx.setDBName(oldDBName); // the database's name is stored in transaction, so we have restore it
 	}
 
 	/**
@@ -69,7 +71,9 @@ class RemoteConnectionImpl extends UnicastRemoteObject implements
 	@Override
 	public void rollback() throws RemoteException {
 		tx.rollback();
+		String oldDBName = tx.getDBName();
 		tx = Transaction.begin();
+		tx.setDBName(oldDBName); // same as commit()
 	}
 
 	// The following methods are used by the server-side classes.
