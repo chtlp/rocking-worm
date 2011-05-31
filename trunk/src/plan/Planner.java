@@ -262,12 +262,13 @@ public class Planner {
 			parser.ColNameValue right = (parser.ColNameValue) cvbe.valueR;
 			int i = 0, il = -1, ir = -1, idxl = -1, idxr = -1;
 			TblRefList tmp = trl;
-			int idx;/*
-					 * System.out.println(left.colName.tblName);
-					 * System.out.println(right.colName.tblName);
-					 * System.out.println(left.colName.colName);
-					 * System.out.println(right.colName.colName);
-					 */
+			int idx;
+			/*
+			 * System.out.println(left.colName.tblName);
+			 * System.out.println(right.colName.tblName);
+			 * System.out.println(left.colName.colName);
+			 * System.out.println(right.colName.colName);
+			 */
 			while (tmp != null) {
 				idx = new Col2Idx().getIdx(hashfromPlans.get(i).alias,
 						left.colName);

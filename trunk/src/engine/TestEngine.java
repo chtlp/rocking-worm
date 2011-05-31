@@ -43,7 +43,7 @@ public class TestEngine {
 		//String[] files = new String[] { "./test/ATIS/create.txt",
 		//		"./test/ATIS/insert.txt", "./test/ATIS/query17.txt" };
 		String[] files = new String[] { "./test/sample/sample-create.txt",
-		"./test/sample/sample-select.txt"};
+		"./test/sample/temp.txt"};
 		//String[] files = new String[] { "./test/test3/test3-create.txt",
 		//		"./test/test3/test3-insert.txt", "./test/test3/test3-success.txt"};
 
