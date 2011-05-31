@@ -1,5 +1,6 @@
 package table;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -142,6 +143,13 @@ public class RecordList {
 		currentInd = 0;
 		assert currentPage != null;
 	}
+	
+	public void close() {
+		if (currentPage != null) {
+			currentPage.release(tr);
+			currentPage = null;
+		}
+	}
 
 	Record buffer = null;
 
@@ -203,6 +211,17 @@ public class RecordList {
 				break;
 			p = BufferManager.getPage(tr, n);
 		}
+	}
+	
+	public void print(PrintStream out) {
+		for(open();;) {
+			Record r = next();
+			if (r == null) break;
+			out.format("recordlist %s\n", r);
+//			Debug.breakOn(r.rowID == 19);
+
+		}
+		close();
 	}
 
 }

@@ -9,6 +9,7 @@ import parser.ColName;
 import parser.SelectExprList;
 import table.Column;
 import table.Record;
+import tlp.util.Debug;
 import transaction.DeadlockException;
 import transaction.Transaction;
 
@@ -156,8 +157,11 @@ public class GroupPlan extends QueryPlan {
 
 	@Override
 	public Record next() throws DeadlockException, TimeoutException {
-		if (having == null)
-			return nextRecord();
+		if (having == null) {
+			Record n = nextRecord();
+			Debug.testSimple.debug("group plan returns {}", n);
+			return n;
+		}
 		else {
 			Record n;
 			do {

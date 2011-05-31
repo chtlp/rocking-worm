@@ -81,7 +81,6 @@ public final class Page extends Cachable {
 
 	public static final int HEADER_LENGTH = 20;
 
-	LinkedList<Transaction> pinners = new LinkedList<Transaction>();
 
 	// the operations below mimic a file system
 	int pos = 0;

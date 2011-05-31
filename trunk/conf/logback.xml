@@ -25,7 +25,7 @@
   <logger name="indexmanager" level="OFF"/>
   <logger name="tablemanager" level="OFF"/>
    <logger name="tablelogger" level="OFF"/>
-   <logger name="test.HashJoin" level="OFF"/>
+   <logger name="test.HashJoin" level="DEBUG"/>
   <logger name="TestLogger.logger1" level="OFF"/>
   <logger name="TestLogger.logger2" level="OFF"/>
   <logger name="TestLogger.testLight3" level="DEBUG"/>

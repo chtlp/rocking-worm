@@ -22,6 +22,8 @@ public abstract class BPlusNode {
 	public static BPlusNode loadNode(Transaction tr, BPlusIndex index,
 			int pageID) {
 		Page p = BufferManager.getPage(tr, pageID);
+//		Debug.testSimple.debug("Load BPlusNode, current pinners {}, loader {}", p.pinners, tr);
+
 		if (p.getType() == Page.TYPE_BTREE_NODE) {
 			p.release(tr);
 			return BPlusInternalNode.loadBPlusInternal(tr, index, pageID);

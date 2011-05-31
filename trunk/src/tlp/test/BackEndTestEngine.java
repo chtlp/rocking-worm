@@ -23,6 +23,8 @@ import filesystem.FileStorage;
 
 public class BackEndTestEngine {
 
+	public static int testcase = 0;
+
 	@Test
 	public void runTest() throws Exception {
 		// String fileName = "create.txt";
@@ -50,15 +52,21 @@ public class BackEndTestEngine {
 		// "./test/ARNO2/insert_MODEL.txt"};
 
 		String[] files = new String[] { "./test/sample/sample-create.txt",
-				"./test/sample/sample-select.txt",
+				"./test/sample/select-8.txt",
+
 //				"./test/sample/sample-index.txt",
-//				"./test/sample/sample-concurrency.txt", 
+//				"./test/sample/sample-concurrency.txt",
+//				"./test/sample/sample-create.txt",
+//				"./test/sample/sample-select.txt",
+//
+//				"./test/sample/sample-index.txt",
+//				"./test/sample/sample-concurrency.txt" 
+
 				};
 		//		String[] files = new String[] { "./test/test3/test3-create.txt",
 		//				"./test/test3/test3-insert.txt",
 		//				"./test/test3/test3-success.txt" };
 
-		int testcase = 0;
 
 		for (String fileName : files) {
 			parser p = new parser(new lexer(new FileInputStream(fileName)));
@@ -96,7 +104,7 @@ public class BackEndTestEngine {
 
 		// BufferManager.flushAll();
 
-		TableManager.printAllTables();
+//		TableManager.printAllTables();
 	}
 
 }
