@@ -51,8 +51,9 @@ public class BackEndTestEngine {
 
 		String[] files = new String[] { "./test/sample/sample-create.txt",
 				"./test/sample/sample-select.txt",
-				"./test/sample/sample-index.txt",
-				"./test/sample/sample-concurrency.txt", };
+//				"./test/sample/sample-index.txt",
+//				"./test/sample/sample-concurrency.txt", 
+				};
 		//		String[] files = new String[] { "./test/test3/test3-create.txt",
 		//				"./test/test3/test3-insert.txt",
 		//				"./test/test3/test3-success.txt" };

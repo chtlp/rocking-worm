@@ -305,7 +305,7 @@ public class Planner {
 	static ArrayList<QueryPlan> hashfromPlans = new ArrayList<QueryPlan>();
 	static ArrayList<Integer> hashAval = new ArrayList<Integer>();
 	static ArrayList<Integer> hashCols = new ArrayList<Integer>();
-	static final boolean useHashJoin = false;
+	static final boolean useHashJoin = true;
 
 	static QueryPlan translate(parser.Select selectAbsyn, Transaction tr,
 			Tail tail) throws DeadlockException, TimeoutException {
