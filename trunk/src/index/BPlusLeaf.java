@@ -60,7 +60,7 @@ public class BPlusLeaf extends BPlusNode {
 	static int cc = 0;
 	@Override
 	public InsertionInfo insert(Transaction tr, Value key, int rid, Value value) {
-		++cc;
+		Debug.breakOn(++cc == 50);
 		KeyValuePair pair = null;
 		int ptr = -1;
 		for (beforeFirst(tr); hasNext();) {
@@ -81,6 +81,9 @@ public class BPlusLeaf extends BPlusNode {
 			if (page.readByte(TOTAL_HEADER_LEN + i * index.leafEntrySize) == 0) {
 				loc = i;
 				break;
+			}
+			if (Debug.testSimple.isDebugEnabled() && cc == 50) {
+				Debug.testSimple.debug("valid_bit {}", page.readByte(TOTAL_HEADER_LEN + i * index.leafEntrySize));
 			}
 			assert page.readByte(TOTAL_HEADER_LEN + i * index.leafEntrySize) == 1;
 		}
@@ -176,12 +179,17 @@ public class BPlusLeaf extends BPlusNode {
 
 		if (isNew) {
 			Page p = BufferManager.getPage(tr, pageID);
-
+			assert p.getType() == Page.TYPE_EMPTY;
+			
 			p.setType(tr, Page.TYPE_BTREE_LEAF);
 			p.seek(Page.HEADER_LENGTH);
 			p.writeByte(tr, (byte) 0);
 			p.writeByte(tr, (byte) -1);
 			p.setNextPage(tr, -1);
+			
+			for(int j=0; j<index.maxNumEntry; ++j) {
+				p.writeByte(tr, TOTAL_HEADER_LEN + j * index.leafEntrySize, (byte)0);
+			}
 			p.release(tr);
 		}
 	}

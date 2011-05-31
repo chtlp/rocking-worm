@@ -21,6 +21,8 @@ public class BPlusInternalNode extends BPlusNode {
 		if (isNew) {
 			Page p = BufferManager.getPage(tr, pageID);
 
+			assert p.getType() == Page.TYPE_EMPTY;
+			
 			p.setType(tr, Page.TYPE_BTREE_NODE);
 			p.writeByte(tr, Page.HEADER_LENGTH, (byte) 0); // zero entries
 			p.writeByte(tr, Page.HEADER_LENGTH + 1, (byte) -1); // no
