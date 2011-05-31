@@ -386,7 +386,6 @@ public class Planner {
 			 * End of the Application of Hash Join
 			 */
 		}
-
 		Cond cond;
 		if (hasWhere != null)
 			cond = new Cond(hasWhere.be, tr);
