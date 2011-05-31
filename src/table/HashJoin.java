@@ -12,8 +12,6 @@ import transaction.DeadlockException;
 import transaction.Transaction;
 import value.Value;
 
-import com.google.common.collect.ArrayListMultimap;
-
 public class HashJoin {
 	public static final int NUM_BLOCKS = 20;
 
@@ -110,7 +108,7 @@ public class HashJoin {
 	boolean started = false;
 	boolean swapped = false;
 	RecordList lhs, rhs;
-	ArrayListMultimap<Value, Record> rhsMap = null;
+	Multimap<Value, Record> rhsMap = null;
 	int d1, d2;
 	Record lrec = null;
 	Iterator<Record> riter = null;
@@ -148,7 +146,7 @@ public class HashJoin {
 				// see if we can store rhs in memory
 				rhsMap = null;
 				if (rhs.size() < BUFFER_THRESHOLD) {
-					rhsMap = ArrayListMultimap.create();
+					rhsMap = new Multimap<Value, Record>();
 
 					for (rhs.open();;) {
 						Record r = rhs.next();
