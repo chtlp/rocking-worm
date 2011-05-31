@@ -10,6 +10,5 @@
 	<classpathentry kind="lib" path="lib/java-cup-11a.jar"/>
 	<classpathentry kind="lib" path="lib/JFlex.jar"/>
 	<classpathentry kind="lib" path="conf"/>
-	<classpathentry kind="lib" path="lib/guava-r09.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

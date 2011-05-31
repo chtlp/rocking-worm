@@ -7,7 +7,6 @@ import java.util.List;
 import filesystem.BufferManager;
 import filesystem.Page;
 
-import tlp.util.Debug;
 import transaction.Transaction;
 import value.Value;
 
