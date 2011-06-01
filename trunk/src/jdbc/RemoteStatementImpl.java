@@ -4,6 +4,9 @@ import java.io.ByteArrayInputStream;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import parser.Absyn;
 import parser.AbsynList;
 import parser.lexer;
@@ -21,6 +24,7 @@ import transaction.Transaction;
 @SuppressWarnings("serial")
 class RemoteStatementImpl extends UnicastRemoteObject implements
 		RemoteStatement {
+	private static Logger logger = LoggerFactory.getLogger("lq.jdbc");
 	private RemoteConnectionImpl rconn;
 	private RemoteResultSet resultSet;
 	private QueryPlan qPlan = null;
@@ -37,7 +41,7 @@ class RemoteStatementImpl extends UnicastRemoteObject implements
 	public boolean execute(String sql) throws RemoteException {
 		try {
 			// a SQL command passed to Parser should end with a semicolon.
-			Startup.logger.debug("Executing: " + sql);
+			logger.debug("Executing: " + sql);
 			if (!sql.endsWith(";"))
 				sql = sql + ";";
 

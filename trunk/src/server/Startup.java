@@ -1,21 +1,19 @@
-package jdbc;
+package server;
 
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
+import jdbc.RemoteDriver;
+import jdbc.RemoteDriverImpl;
+
 import logging.BuildCheckpoint;
 import logging.Recovery;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import util.Config;
 import util.Constant;
 import filesystem.FileStorage;
 
 public class Startup {
-	static Logger logger = LoggerFactory.getLogger("lq.jdbc");
-
 	public static void main(String args[]) throws Exception {
 		// initialize database
 		System.out.println("initialzing database...");
