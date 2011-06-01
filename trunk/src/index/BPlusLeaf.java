@@ -16,10 +16,7 @@ public class BPlusLeaf extends BPlusNode {
 
 	int iter;
 
-	Transaction iterTr = null;
-
-	public void beforeFirst(Transaction tr) {
-		this.iterTr = tr;
+	public void open() {
 		page = BufferManager.getPage(tr, pageID);
 		iter = page.readByte(Page.HEADER_LENGTH + 1);
 	}
@@ -53,29 +50,87 @@ public class BPlusLeaf extends BPlusNode {
 
 	public void close() {
 		iter = -1;
-		page.release(iterTr);
-		iterTr = null;
+		page.release(tr);
 	}
 
 	static int cc = 0;
+
 	@Override
 	public InsertionInfo insert(Transaction tr, Value key, int rid, Value value) {
-		KeyValuePair pair = null;
-		int ptr = -1;
-		for (beforeFirst(tr); hasNext();) {
-			int j = iter;
-			KeyValuePair p = getNext();
-			int c = compare(p.key, p.rid, key, rid);
-			assert !(index.isPrimaryIndex() && c == 0);
-			if (c < 0) {
-				ptr = j;
-				pair = p;
-			} else
-				break;
+		int ptr = -1, loc = -1;
+		open();
+		if (!BPlusIndex.BINARY_SEARCH) {
+			KeyValuePair pair = null;
+			for (; hasNext();) {
+				int j = iter;
+				KeyValuePair p = getNext();
+				int c = compare(p.key, p.rid, key, rid);
+				assert !(index.isPrimaryIndex() && c == 0);
+				if (c < 0) {
+					ptr = j;
+					pair = p;
+				} else
+					break;
+			}
+		} else {
+			PageLocator l = binarySearch(tr, key, rid, Index.SEARCH_AT);
+
+			if (l.ind >= 0) {
+				page.seek(TOTAL_HEADER_LEN + l.ind * index.leafEntrySize + 2);
+				int prid = page.readInt();
+				Value pkey = null;
+				if (index.columnID >= 0)
+					pkey = page.readValue(index.keyType);
+
+				int c = compare(pkey, prid, key, rid);
+
+				ptr = c > 0 ? -1 : l.ind;
+			} else {
+				ptr = -1;
+			}
+
 		}
 
+//		if (Debug.testSimple.isDebugEnabled()) {
+//			if (ptr == -1 && page.readByte(Page.HEADER_LENGTH) > 0) {
+//				int next = page.readByte(Page.HEADER_LENGTH + 1);
+//				page.seek(TOTAL_HEADER_LEN + next * index.leafEntrySize + 2);
+//
+//				// always has rid
+//				int prid = page.readInt();
+//
+//				Value pkey = null;
+//				if (index.columnID >= 0)
+//					pkey = page.readValue(index.keyType);
+//				assert pkey.compareTo(key) >= 0;
+//
+//			}
+//			if (ptr >= 0) {
+//				page.seek(TOTAL_HEADER_LEN + ptr * index.leafEntrySize + 1);
+//				int next = page.readByte();
+//
+//				int prid = page.readInt();
+//
+//				Value pkey = null;
+//				if (index.columnID >= 0)
+//					pkey = page.readValue(index.keyType);
+//
+//				assert pkey.compareTo(key) <= 0;
+//
+//				if (next >= 0) {
+//					page.seek(TOTAL_HEADER_LEN + next * index.leafEntrySize + 2);
+//					prid = page.readInt();
+//					pkey = null;
+//					if (index.columnID >= 0) {
+//						pkey = page.readValue(index.keyType);
+//					}
+//					assert pkey.compareTo(key) >= 0;
+//				}
+//
+//			}
+//		}
+
 		// find a vacant entry, mayoverflow
-		int loc = -1;
 		for (int i = 0; i < index.maxNumEntry; ++i) {
 			if (page.readByte(TOTAL_HEADER_LEN + i * index.leafEntrySize) == 0) {
 				loc = i;
@@ -172,19 +227,21 @@ public class BPlusLeaf extends BPlusNode {
 	private BPlusLeaf(Transaction tr, BPlusIndex i, int page, boolean isNew) {
 		index = i;
 		pageID = page;
+		this.tr = tr;
 
 		if (isNew) {
 			Page p = BufferManager.getPage(tr, pageID);
 			assert p.getType() == Page.TYPE_EMPTY;
-			
+
 			p.setType(tr, Page.TYPE_BTREE_LEAF);
 			p.seek(Page.HEADER_LENGTH);
 			p.writeByte(tr, (byte) 0);
 			p.writeByte(tr, (byte) -1);
 			p.setNextPage(tr, -1);
-			
-			for(int j=0; j<index.maxNumEntry; ++j) {
-				p.writeByte(tr, TOTAL_HEADER_LEN + j * index.leafEntrySize, (byte)0);
+
+			for (int j = 0; j < index.maxNumEntry; ++j) {
+				p.writeByte(tr, TOTAL_HEADER_LEN + j * index.leafEntrySize,
+						(byte) 0);
 			}
 			p.release(tr);
 		}
@@ -200,11 +257,77 @@ public class BPlusLeaf extends BPlusNode {
 		return new BPlusLeaf(tr, index, pageID, false);
 	}
 
+	public PageLocator binarySearch(Transaction tr, Value key, int rid,
+			int option) {
+		open();
+		int num = page.readByte(Page.HEADER_LENGTH);
+		if (num == 0) {
+			close();
+			return new PageLocator(page.getPageID(), -1);
+		}
+
+		int[] loc = new int[num];
+		for (int i = 0; i < num; ++i) {
+			int p = TOTAL_HEADER_LEN + iter * index.leafEntrySize;
+			loc[i] = p;
+			iter = page.readByte(p + 1);
+		}
+
+		int low = 0, high = num - 1;
+		while (low + 1 < high) {
+			int mid = (low + high) / 2;
+
+			page.seek(loc[mid] + 2);
+
+			int prid = page.readInt();
+			Value pkey = null;
+			if (index.columnID >= 0)
+				pkey = page.readValue(index.keyType);
+
+//			Debug.testSimple.debug("bplus leaf binary search {}", pkey);
+			int c = compare(pkey, prid, key, rid);
+
+			if (option == Index.SEARCH_AT) {
+				if (c > 0)
+					high = mid - 1;
+				else
+					low = mid;
+			} else if (option == Index.SEARCH_AFTER) {
+				if (c <= 0)
+					low = mid + 1;
+				else
+					high = mid;
+			}
+		}
+
+		close();
+
+		int ret = low;
+		page.seek(loc[high] + 2);
+
+		int prid = page.readInt();
+		Value pkey = null;
+		if (index.columnID >= 0)
+			pkey = page.readValue(index.keyType);
+
+		int c = compare(pkey, prid, key, rid);
+		if (c <= 0)
+			ret = high;
+
+		return new PageLocator(page.getPageID(), (loc[ret] - TOTAL_HEADER_LEN)
+				/ index.leafEntrySize);
+
+	}
+
 	@Override
 	public PageLocator search(Transaction tr, Value key, int rid, int option) {
+		if (BPlusIndex.BINARY_SEARCH) {
+			return binarySearch(tr, key, rid, option);
+		}
+
 		int childL = -1, childE = -1, childR = -1;
 		int ptr = -1;
-		for (beforeFirst(tr); hasNext();) {
+		for (open(); hasNext();) {
 			ptr = iter;
 			KeyValuePair pair = getNext();
 			int c = compare(pair.key, pair.rid, key, rid);
@@ -260,7 +383,7 @@ public class BPlusLeaf extends BPlusNode {
 			int left, int mid, int right) {
 		int childL = -1, childE = -1;
 		int ptr = -1;
-		for (beforeFirst(tr); hasNext();) {
+		for (open(); hasNext();) {
 			ptr = iter;
 			KeyValuePair pair = getNext();
 			if (pair == null) {

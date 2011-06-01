@@ -15,6 +15,9 @@ public abstract class BPlusNode {
 
 	protected int pageID;
 	protected BPlusIndex index;
+	
+	Transaction tr = null;
+
 
 	public abstract InsertionInfo insert(Transaction tr, Value key, int rid,
 			Value value);
@@ -69,6 +72,7 @@ public abstract class BPlusNode {
 	protected Page page;
 
 	protected byte[] removeFront(Transaction tr, int num) {
+//		Debug.breakOn(this instanceof BPlusInternalNode);
 		int size = entrySize();
 		byte[] buffer = new byte[(size - 2) * num];
 
@@ -398,7 +402,7 @@ public abstract class BPlusNode {
 
 	public abstract String shortName();
 
-	public abstract void beforeFirst(Transaction tr);
+	public abstract void open();
 
 	public abstract boolean hasNext();
 
@@ -406,17 +410,17 @@ public abstract class BPlusNode {
 
 	public abstract void close();
 
-	public void drop(Transaction tr) {
+	public void drop() {
 		if (this instanceof BPlusLeaf) {
 			BufferManager.free(tr, pageID);
 			return;
 		}
 
-		for (beforeFirst(tr); hasNext();) {
+		for (open(); hasNext();) {
 			KeyValuePair pair = getNext();
 			int pageID = (Integer) pair.value.get();
 			BPlusNode n = BPlusNode.loadNode(tr, this.index, pageID);
-			n.drop(tr);
+			n.drop();
 		}
 
 		close();

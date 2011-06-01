@@ -114,49 +114,51 @@ public class TestTableOperation {
 
 		// System.exit(0);
 
-		TableIterator iter = words.getRecords(tr);
-
-		int k = 0;
-		for (iter.open(); iter.hasNext();) {
-			Record r = iter.next();
-			System.out.println(r);
-			++k;
-		}
-		iter.close();
-		assertEquals(N, k);
-
-		Index scan = words.getScanIndex(tr);
-		for (String w : queries) {
-			assert scan.find(new StrValue(w)) != null : String.format(
-					"%s not found", w);
-		}
-
-		for (String w : deletion) {
-			Record r = new Record();
-			r.addValue(new StrValue(w));
-			assert scan.removeUnique(tr, r) : r.getValue(0).get();
-			Debug.testLight.debug("{} removed", w);
-		}
-
-		for (String w : queries) {
-			assert (scan.find(new StrValue(w)) != null) != deletion.contains(w);
-		}
-
-		for (String w : deletion) {
-			Record r = new Record();
-			r.addValue(new StrValue(w));
-			scan.add(tr, r);
-			Debug.testLight.debug("{} inserted", w);
-		}
-
-		for (String w : queries) {
-			assert scan.find(new StrValue(w)) != null : String.format(
-					"%s not found", w);
-		}
+//		TableIterator iter = words.getRecords(tr);
+//
+//		int k = 0;
+//		for (iter.open(); iter.hasNext();) {
+//			Record r = iter.next();
+//			System.out.println(r);
+//			++k;
+//		}
+//		iter.close();
+//		assertEquals(N, k);
+//
+//		Index scan = words.getScanIndex(tr);
+//		for (String w : queries) {
+//			Debug.breakOn(w.equals("a"));
+//			assert scan.find(new StrValue(w)) != null : String.format(
+//					"%s not found", w);
+//		}
+//
+//		for (String w : deletion) {
+//			Record r = new Record();
+//			r.addValue(new StrValue(w));
+//			assert scan.removeUnique(tr, r) : r.getValue(0).get();
+//			Debug.testLight.debug("{} removed", w);
+//		}
+//
+//		for (String w : queries) {
+//			assert (scan.find(new StrValue(w)) != null) != deletion.contains(w);
+//		}
+//
+//		for (String w : deletion) {
+//			Record r = new Record();
+//			r.addValue(new StrValue(w));
+//			scan.add(tr, r);
+//			Debug.testLight.debug("{} inserted", w);
+//		}
+//
+//		for (String w : queries) {
+//			Debug.breakOn(w.equals("armorial"));
+//			assert scan.find(new StrValue(w)) != null : String.format(
+//					"%s not found", w);
+//		}
 
 		tr.commit();
 
-		// words.printTable(System.out);
+//		 words.printTable(System.out);
 
 //		BufferManager.checkBufferStatus();
 		// BufferManager.flushAll();

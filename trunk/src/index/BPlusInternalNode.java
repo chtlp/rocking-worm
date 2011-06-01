@@ -2,6 +2,9 @@ package index;
 
 import java.io.PrintStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import tlp.util.Debug;
 import transaction.Transaction;
 import value.IntValue;
@@ -13,16 +16,20 @@ import filesystem.PageLocator;
 
 public class BPlusInternalNode extends BPlusNode {
 
+	public static Logger logger = LoggerFactory
+			.getLogger(BPlusInternalNode.class);
+
 	private BPlusInternalNode(Transaction tr, BPlusIndex i, int page,
 			boolean isNew) {
 		index = i;
 		pageID = page;
+		this.tr = tr;
 
 		if (isNew) {
 			Page p = BufferManager.getPage(tr, pageID);
 
 			assert p.getType() == Page.TYPE_EMPTY;
-			
+
 			p.setType(tr, Page.TYPE_BTREE_NODE);
 			p.writeByte(tr, Page.HEADER_LENGTH, (byte) 0); // zero entries
 			p.writeByte(tr, Page.HEADER_LENGTH + 1, (byte) -1); // no
@@ -57,10 +64,7 @@ public class BPlusInternalNode extends BPlusNode {
 
 	int iter = -1;
 
-	Transaction iterTr = null;
-
-	public void beforeFirst(Transaction tr) {
-		this.iterTr = tr;
+	public void open() {
 		page = BufferManager.getPage(tr, pageID);
 		iter = page.readByte(Page.HEADER_LENGTH + 1);
 	}
@@ -94,29 +98,93 @@ public class BPlusInternalNode extends BPlusNode {
 
 	public void close() {
 		iter = -1;
-		page.release(iterTr);
-		iterTr = null;
+		page.release(tr);
 	}
 
+	static int cc = 0;
 	@Override
 	public InsertionInfo insert(Transaction tr, Value key, int rid, Value value) {
+		Debug.breakOn(key.get().equals("ABS"));
+		++cc;
 		// note that a internal node is guaranteed to have children
-		KeyValuePair pair = null;
-		int ptr = -1;
-		for (beforeFirst(tr); hasNext();) {
-			int j = iter;
-			KeyValuePair p = getNext();
-			// the first element is a dummy one
-			if (ptr == -1 || compare(p.key, p.rid, key, rid) <= 0) {
-				ptr = j;
-				pair = p;
-			} else
-				break;
+		open();
+		int child = -1, ptr = -1;
+		if (!BPlusIndex.BINARY_SEARCH) {
+			KeyValuePair pair = null;
+			for (open(); hasNext();) {
+				int j = iter;
+				KeyValuePair p = getNext();
+				// the first element is a dummy one
+				if (logger.isDebugEnabled()) {
+					if (ptr == -1 && p.key != null)
+						assert p.key.compareTo(key) <= 0;
+					if (ptr != -1)
+						assert p.key != null;
+				}
+				if (ptr == -1 || compare(p.key, p.rid, key, rid) <= 0) {
+					ptr = j;
+					pair = p;
+				} else
+					break;
+			}
+			child = (Integer) pair.value.get();
 		}
+		else {
+			PageLocator loc = binarySearch(tr, key, rid, BPlusIndex.SEARCH_AT);
+			page.seek(TOTAL_HEADER_LEN + loc.ind * index.leafEntrySize + 2);
+			ptr = loc.ind;
+			
+			int prid = -1;
+			Value pkey = null;
+			if (index.hasRidKey())
+				prid = page.readInt();
+
+			if (index.columnID >= 0)
+				pkey = page.readValue(index.keyType);
+
+			child = page.readInt();
+
+			
+//			if (Debug.testSimple.isDebugEnabled()) {
+//				if (loc.ind == -1 && page.readByte(Page.HEADER_LENGTH) > 0) {
+//					assert false;
+//				}
+//				if (loc.ind >= 0) {
+//					page.seek(TOTAL_HEADER_LEN + loc.ind * index.internalEntrySize + 1);
+//					int next = page.readByte();
+//
+//					prid = -1;
+//					pkey = null;
+//					if (index.hasRidKey())
+//						prid = page.readInt();
+//
+//					if (index.columnID >= 0)
+//						pkey = page.readValue(index.keyType);
+//
+//					assert pkey == null || pkey.compareTo(key) <= 0;
+//
+//					if (next >= 0) {
+//						page.seek(TOTAL_HEADER_LEN + next * index.internalEntrySize
+//								+ 2);
+//						prid = -1;
+//						pkey = null;
+//						if (index.hasRidKey())
+//							prid = page.readInt();
+//
+//						if (index.columnID >= 0)
+//							pkey = page.readValue(index.keyType);
+//						
+//						assert pkey.compareTo(key) >= 0;
+//					}
+//
+//				}
+//			}
+
+		}
+
 		close();
 
-		BPlusNode node = BPlusNode.loadNode(tr, index,
-				(Integer) pair.value.get());
+		BPlusNode node = BPlusNode.loadNode(tr, index, child);
 		InsertionInfo info = node.insert(tr, key, rid, value);
 		if (info.partKey == null && info.partRid == -1)
 			return new InsertionInfo(info.rid, null, -1, -1);
@@ -131,7 +199,7 @@ public class BPlusInternalNode extends BPlusNode {
 		// note that a internal node is guaranteed to have children
 		KeyValuePair pair = null;
 		int ptr = -1;
-		for (beforeFirst(tr); hasNext();) {
+		for (open(); hasNext();) {
 			int j = iter;
 			KeyValuePair p = getNext();
 			if (ptr == -1 || compare(pair.key, pair.rid, key, rid) <= 0) {
@@ -222,28 +290,123 @@ public class BPlusInternalNode extends BPlusNode {
 		return new InsertionInfo(-1, partKey, partRid, q.getPageID());
 	}
 
+	public PageLocator binarySearch(Transaction tr, Value key, int rid,
+			int option) {
+		open();
+		int num = page.readByte(Page.HEADER_LENGTH);
+		if (num == 0) {
+			close();
+			return new PageLocator(page.getPageID(), -1);
+		}
+
+		int[] loc = new int[num];
+		for (int i = 0; i < num; ++i) {
+			int p = TOTAL_HEADER_LEN + iter * index.internalEntrySize;
+			loc[i] = p;
+			iter = page.readByte(p + 1);
+		}
+
+		int low = 0, high = num - 1;
+		while (low + 1 < high) {
+			int mid = (low + high) / 2;
+
+			page.seek(loc[mid] + 2);
+
+			int prid = -1;
+			Value pkey = null;
+			if (index.hasRidKey())
+				prid = page.readInt();
+
+			if (index.columnID >= 0)
+				pkey = page.readValue(index.keyType);
+
+			int c = compare(pkey, prid, key, rid);
+
+			if (option == Index.SEARCH_AT) {
+				if (c > 0)
+					high = mid - 1;
+				else
+					low = mid;
+			} else if (option == Index.SEARCH_AFTER) {
+				if (c <= 0)
+					low = mid + 1;
+				else
+					high = mid;
+			}
+		}
+
+		close();
+
+		int ret = low;
+		page.seek(loc[high] + 2);
+
+		int prid = -1;
+		Value pkey = null;
+		if (index.hasRidKey())
+			prid = page.readInt();
+
+		if (index.columnID >= 0)
+			pkey = page.readValue(index.keyType);
+
+		int c = compare(pkey, prid, key, rid);
+		if (c <= 0)
+			ret = high;
+
+		return new PageLocator(page.getPageID(), (loc[ret] - TOTAL_HEADER_LEN)
+				/ index.internalEntrySize);
+
+	}
+
 	@Override
 	public PageLocator search(Transaction tr, Value key, int rid, int option) {
-		int childL = -1, childE = -1;
-		boolean first = true;
-		for (beforeFirst(tr); hasNext();) {
-			KeyValuePair pair = getNext();
-			int c = first ? -1 : compare(pair.key, pair.rid, key, rid);
-			Debug.testLoggerB.debug(
-					"internal node({}): search key = {}, tree entry = {}",
-					new Object[] { pageID, key, pair.key });
-			first = false;
-			if (c < 0)
-				childL = (Integer) pair.value.get();
-			else if (c == 0) {
-				childE = (Integer) pair.value.get();
-			} else if (c > 0)
-				break;
-		}
-		int child = childL;
-		if (option == Index.SEARCH_AFTER && childE >= 0)
-			child = childE;
+		int child = -1;
+		open();
+		if (!BPlusIndex.BINARY_SEARCH) {
+			int childL = -1, childE = -1;
+			boolean first = true;
+			for (; hasNext();) {
+				KeyValuePair pair = getNext();
+				if (logger.isDebugEnabled()) {
+					if (first && pair.key != null)
+						assert pair.key.compareTo(key) <= 0;
+					if (!first)
+						assert pair.key != null;
+				}
 
+				int c = first ? -1 : compare(pair.key, pair.rid, key, rid);
+				Debug.testLoggerB.debug(
+						"internal node({}): search key = {}, tree entry = {}",
+						new Object[] { pageID, key, pair.key });
+				if (!first)
+					assert pair.key != null;
+				first = false;
+				if (c < 0)
+					childL = (Integer) pair.value.get();
+				else if (c == 0) {
+					childE = (Integer) pair.value.get();
+				} else if (c > 0)
+					break;
+			}
+			child = childL;
+			if (option == Index.SEARCH_AFTER && childE >= 0)
+				child = childE;
+
+		} else {
+			PageLocator loc = binarySearch(tr, key, rid, option);
+
+			page.seek(TOTAL_HEADER_LEN + loc.ind * index.leafEntrySize + 2);
+
+			int prid = -1;
+			Value pkey = null;
+			if (index.hasRidKey())
+				prid = page.readInt();
+
+			if (index.columnID >= 0)
+				pkey = page.readValue(index.keyType);
+
+			child = page.readInt();
+
+		}
 		close();
 		BPlusNode node = BPlusNode.loadNode(tr, index, child);
 		return node.search(tr, key, rid, option);
@@ -253,15 +416,16 @@ public class BPlusInternalNode extends BPlusNode {
 	public boolean remove(Transaction tr, Value key, int rid, Page father,
 			int left, int mid, int right) {
 		if (Debug.testLight.isDebugEnabled() && pageID == 12) {
-			beforeFirst(tr);
-			Debug.testLight.debug("internal node {}, numEntry = {}", pageID, page.readByte(Page.HEADER_LENGTH));
+			open();
+			Debug.testLight.debug("internal node {}, numEntry = {}", pageID,
+					page.readByte(Page.HEADER_LENGTH));
 			close();
 		}
 		boolean removed = false;
 		int childL = -1, child = -1, childR = -1, childPage = -1;
 		int ptr = -1;
 		boolean first = true;
-		for (beforeFirst(tr); hasNext();) {
+		for (open(); hasNext();) {
 			ptr = iter;
 			KeyValuePair pair = getNext();
 			if (pair == null)
