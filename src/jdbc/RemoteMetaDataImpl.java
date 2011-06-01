@@ -4,6 +4,9 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import plan.Alia;
 
 import table.Column;
@@ -14,7 +17,7 @@ import table.Column;
 @SuppressWarnings("serial")
 public class RemoteMetaDataImpl extends UnicastRemoteObject implements
 		RemoteMetaData {
-
+	private static Logger logger = LoggerFactory.getLogger("lq.jdbc");
 	private ArrayList<Alia> alias;
 	private ArrayList<Column> columns;
 
@@ -38,7 +41,7 @@ public class RemoteMetaDataImpl extends UnicastRemoteObject implements
 	 * @see simpledb.remote.RemoteMetaData#getColumnCount()
 	 */
 	public int getColumnCount() throws RemoteException {
-		Startup.logger.debug("column num = " + alias.size());
+		logger.debug("column num = " + alias.size());
 		return alias.size();
 	}
 

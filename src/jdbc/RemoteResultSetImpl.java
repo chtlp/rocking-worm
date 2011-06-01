@@ -5,6 +5,9 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.Date;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import plan.QueryPlan;
 import table.Record;
 import value.BooleanValue;
@@ -21,6 +24,7 @@ import value.Value;
 @SuppressWarnings("serial")
 class RemoteResultSetImpl extends UnicastRemoteObject implements
 		RemoteResultSet {
+	private static Logger logger = LoggerFactory.getLogger("lq.jdbc");
 	private QueryPlan plan;
 	private Record currentRecord;
 	private RemoteConnectionImpl rconn;
@@ -54,7 +58,7 @@ class RemoteResultSetImpl extends UnicastRemoteObject implements
 	@Override
 	public boolean next() throws RemoteException {
 		try {
-			Startup.logger.debug("next row");
+			logger.debug("next row");
 			currentRecord = plan.next();
 			return currentRecord != null;
 		} catch (Exception e) {
@@ -82,7 +86,7 @@ class RemoteResultSetImpl extends UnicastRemoteObject implements
 				res = new BigDecimal((String) v.get());
 			else
 				throw new RuntimeException("unknown value in RemoteResultSet.getObject()");
-			Startup.logger.debug("getObject = " + res);
+			logger.debug("getObject = " + res);
 			return res;
 		} catch (Exception e) {
 			rconn.rollback();
