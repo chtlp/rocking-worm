@@ -21,6 +21,7 @@ import filesystem.RowIdIndex;
 // only supports single column key
 public class BPlusIndex extends Index implements TableIterator {
 
+	public static final boolean BINARY_SEARCH = true;
 	public int internalEntrySize;
 	public int leafEntrySize;
 
@@ -345,7 +346,7 @@ public class BPlusIndex extends Index implements TableIterator {
 	public void drop(Transaction tr) {
 		if (treeRoot >= 0) {
 			BPlusNode n = BPlusNode.loadNode(tr, this, treeRoot);
-			n.drop(tr);
+			n.drop();
 		}
 
 		BufferManager.free(tr, metaPageID);

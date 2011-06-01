@@ -137,7 +137,7 @@ public class SelectPlan extends QueryPlan {
 			Record ret = getValues(null);
 			flag = false;
 			if (ret != null) ++counter;
-			Debug.testSimple.debug("select res {}", ret);
+//			Debug.testSimple.debug("select res {}", ret);
 			return ret;
 		}
 
