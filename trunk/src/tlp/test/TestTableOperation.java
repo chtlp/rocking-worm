@@ -15,6 +15,7 @@ import java.util.LinkedList;
 import java.util.Scanner;
 
 import logging.LogManager;
+import logging.Recovery;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -53,6 +54,7 @@ public class TestTableOperation {
 		new File(dataFileName).delete();
 
 		FileStorage.loadFile(dataFileName);
+		Recovery.recover();
 		FileStorage.init();
 
 		created = true;
@@ -159,6 +161,7 @@ public class TestTableOperation {
 		tr.commit();
 
 //		 words.printTable(System.out);
+		TableManager.printAllTables();
 
 //		BufferManager.checkBufferStatus();
 		// BufferManager.flushAll();
