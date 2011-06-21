@@ -25,7 +25,6 @@ public class TestLoadingDatabase {
 		new File("myApp.log").delete();
 
 		Config.load("test1.config");
-		Config.set("MakingErrors", "false");
 
 		System.out.println(new File(".").getCanonicalPath());
 

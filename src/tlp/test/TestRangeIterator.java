@@ -132,7 +132,7 @@ public class TestRangeIterator {
 //		RangeIterator eq = (RangeIterator)words.getScanIndex(tr).findEqual(new IntValue(5));
 //
 //		eq.print(System.out);
-//
+
 		RangeIterator left = (RangeIterator)words.getScanIndex(tr).findRange(Index.SEARCH_AFTER, null, null, null);
 		
 		left.print(System.out);
@@ -141,7 +141,7 @@ public class TestRangeIterator {
 //		RangeIterator right = (RangeIterator)words.getScanIndex(tr).findRange(null, null, Index.SEARCH_AT, new IntValue(5));
 //		
 //		right.print(System.out);
-//
+
 //		
 		
 		

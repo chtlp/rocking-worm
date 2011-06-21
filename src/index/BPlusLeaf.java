@@ -91,44 +91,44 @@ public class BPlusLeaf extends BPlusNode {
 
 		}
 
-//		if (Debug.testSimple.isDebugEnabled()) {
-//			if (ptr == -1 && page.readByte(Page.HEADER_LENGTH) > 0) {
-//				int next = page.readByte(Page.HEADER_LENGTH + 1);
-//				page.seek(TOTAL_HEADER_LEN + next * index.leafEntrySize + 2);
-//
-//				// always has rid
-//				int prid = page.readInt();
-//
-//				Value pkey = null;
-//				if (index.columnID >= 0)
-//					pkey = page.readValue(index.keyType);
-//				assert pkey.compareTo(key) >= 0;
-//
-//			}
-//			if (ptr >= 0) {
-//				page.seek(TOTAL_HEADER_LEN + ptr * index.leafEntrySize + 1);
-//				int next = page.readByte();
-//
-//				int prid = page.readInt();
-//
-//				Value pkey = null;
-//				if (index.columnID >= 0)
-//					pkey = page.readValue(index.keyType);
-//
-//				assert pkey.compareTo(key) <= 0;
-//
-//				if (next >= 0) {
-//					page.seek(TOTAL_HEADER_LEN + next * index.leafEntrySize + 2);
-//					prid = page.readInt();
-//					pkey = null;
-//					if (index.columnID >= 0) {
-//						pkey = page.readValue(index.keyType);
-//					}
-//					assert pkey.compareTo(key) >= 0;
-//				}
-//
-//			}
-//		}
+		// if (Debug.testSimple.isDebugEnabled()) {
+		// if (ptr == -1 && page.readByte(Page.HEADER_LENGTH) > 0) {
+		// int next = page.readByte(Page.HEADER_LENGTH + 1);
+		// page.seek(TOTAL_HEADER_LEN + next * index.leafEntrySize + 2);
+		//
+		// // always has rid
+		// int prid = page.readInt();
+		//
+		// Value pkey = null;
+		// if (index.columnID >= 0)
+		// pkey = page.readValue(index.keyType);
+		// assert pkey.compareTo(key) >= 0;
+		//
+		// }
+		// if (ptr >= 0) {
+		// page.seek(TOTAL_HEADER_LEN + ptr * index.leafEntrySize + 1);
+		// int next = page.readByte();
+		//
+		// int prid = page.readInt();
+		//
+		// Value pkey = null;
+		// if (index.columnID >= 0)
+		// pkey = page.readValue(index.keyType);
+		//
+		// assert pkey.compareTo(key) <= 0;
+		//
+		// if (next >= 0) {
+		// page.seek(TOTAL_HEADER_LEN + next * index.leafEntrySize + 2);
+		// prid = page.readInt();
+		// pkey = null;
+		// if (index.columnID >= 0) {
+		// pkey = page.readValue(index.keyType);
+		// }
+		// assert pkey.compareTo(key) >= 0;
+		// }
+		//
+		// }
+		// }
 
 		// find a vacant entry, mayoverflow
 		for (int i = 0; i < index.maxNumEntry; ++i) {
@@ -284,7 +284,7 @@ public class BPlusLeaf extends BPlusNode {
 			if (index.columnID >= 0)
 				pkey = page.readValue(index.keyType);
 
-//			Debug.testSimple.debug("bplus leaf binary search {}", pkey);
+			// Debug.testSimple.debug("bplus leaf binary search {}", pkey);
 			int c = compare(pkey, prid, key, rid);
 
 			if (option == Index.SEARCH_AT) {
@@ -303,16 +303,28 @@ public class BPlusLeaf extends BPlusNode {
 		close();
 
 		int ret = low;
-		page.seek(loc[high] + 2);
+		if (low != high) {
+			page.seek(loc[low] + 2);
+			int prid = page.readInt();
+			Value pkey = null;
+			if (index.columnID >= 0)
+				pkey = page.readValue(index.keyType);
 
-		int prid = page.readInt();
-		Value pkey = null;
-		if (index.columnID >= 0)
-			pkey = page.readValue(index.keyType);
+			int c0 = compare(pkey, prid, key, rid);
 
-		int c = compare(pkey, prid, key, rid);
-		if (c <= 0)
-			ret = high;
+			if (c0 < 0) {
+				page.seek(loc[high] + 2);
+
+				prid = page.readInt();
+				pkey = null;
+				if (index.columnID >= 0)
+					pkey = page.readValue(index.keyType);
+
+				int c = compare(pkey, prid, key, rid);
+				if (c0 < 0 && c <= 0 && option == Index.SEARCH_AT)
+					ret = high;
+			}
+		}
 
 		return new PageLocator(page.getPageID(), (loc[ret] - TOTAL_HEADER_LEN)
 				/ index.leafEntrySize);
